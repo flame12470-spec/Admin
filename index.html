@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ผู้ดูแล - พรรคคอนนิวเตอร์</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
+<style>
+:root{--bg:#f3f5fa;--surface:#fff;--ink:#0c1324;--mute:#69758c;--line:#e5e9f2;--brand:#1d4fd8;--soft:#eef2ff;--coral:#ff5d73;--sh:0 1px 2px rgba(12,19,36,.05),0 10px 28px -12px rgba(12,19,36,.14)}
+*{box-sizing:border-box}
+body{margin:0;font:400 15px/1.6 Anuphan,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.hide{display:none!important}
+header{position:sticky;top:0;z-index:30;padding:12px 16px 0}
+.bar{max-width:1180px;margin:auto;padding:8px 12px 8px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.9);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:999px;box-shadow:var(--sh)}
+.logo{font-weight:700;font-size:17px;display:flex;gap:10px;align-items:center;min-width:0}
+.logo span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--soft);color:var(--brand);flex:none}
+nav{display:flex;gap:2px;flex:none}
+nav a,nav button{background:none;border:0;padding:8px 14px;border-radius:999px;font-weight:500;color:var(--mute);text-decoration:none;white-space:nowrap}
+nav a:hover,nav button:hover{background:var(--soft);color:var(--brand)}
+main{max-width:1180px;margin:auto;padding:22px 16px 90px}
+.shell{display:grid;grid-template-columns:230px minmax(0,1fr);gap:22px;align-items:start}
+.side{position:sticky;top:84px;display:flex;flex-direction:column;gap:2px;padding:10px;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--sh);max-height:calc(100vh - 104px);overflow-y:auto;scrollbar-width:thin}
+.side .sh{font-size:12px;font-weight:600;color:var(--mute);padding:12px 14px 4px;letter-spacing:.02em}
+.side button{text-align:left;border:0;background:none;padding:11px 14px;border-radius:14px;font-weight:600;color:var(--mute)}
+.side button:hover{background:var(--soft);color:var(--brand)}
+.side button.on{background:var(--brand);color:#fff}
+.side hr{border:0;border-top:1px solid var(--line);margin:6px 8px}
+.content{min-width:0}
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:22px;margin-bottom:18px;box-shadow:var(--sh);overflow:hidden}
+.sec>.hd{padding:20px 26px 16px;border-bottom:1px solid var(--line)}
+.sec>.hd h2{margin:0;font-size:19px;line-height:1.35}
+.sec>.hd p{margin:2px 0 0;color:var(--mute);font-size:13.5px}
+.sec>.bd{padding:24px 26px}
+.hd.flex{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 22px}
+.g>.full{grid-column:1/-1}
+.lbl{display:block;font-weight:600;font-size:14px;margin-bottom:7px}
+.hint{display:block;color:var(--mute);font-size:12.5px;margin-top:5px}
+input,select,textarea{display:block;width:100%;min-height:46px;padding:11px 14px;border:1.5px solid transparent;border-radius:14px;background:#e9edf6}
+input:focus,select:focus,textarea:focus{outline:0;background:#fff;border-color:var(--brand);box-shadow:0 0 0 4px rgba(29,79,216,.13)}
+textarea{min-height:130px;resize:vertical}
+/* อัปโหลดไฟล์ / วางลิงก์ */
+.upl{display:flex;align-items:center;gap:16px;padding:14px;border:1.5px dashed #c5cfe8;border-radius:18px;background:#fafbff}
+.thumb{flex:none;width:92px;height:92px;border-radius:14px;background:#e9edf6;display:grid;place-items:center;overflow:hidden;font-size:11px;color:var(--mute);text-align:center;padding:4px}
+.thumb img{width:100%;height:100%;object-fit:contain;background:#fff;border-radius:10px}
+.upl .acts{display:flex;flex-direction:column;gap:8px;align-items:flex-start;min-width:0;flex:1}
+.upl .acts .name{font-size:12.5px;color:var(--mute)}
+.upl .acts .row{display:flex;gap:8px;flex-wrap:wrap}
+.lk{display:flex;gap:8px;width:100%;flex-wrap:wrap}
+.lk input{flex:1;min-width:170px;min-height:36px;padding:7px 12px;font-size:13.5px}
+/* สีเว็บไซต์ */
+.presets{display:flex;flex-wrap:wrap;gap:10px}
+.pst{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 8px;border:1.5px solid var(--line);background:#fff;border-radius:999px;font-weight:600;font-size:13.5px}
+.pst:hover{border-color:var(--brand)}
+.pst i{width:16px;height:16px;border-radius:50%;margin-right:-10px;border:2px solid #fff;display:block}
+.pst i:last-of-type{margin-right:0}
+.pst span{margin-left:12px}
+.clr{display:flex;gap:10px;align-items:center}
+.clr input[type=color]{width:64px;flex:none;padding:3px;cursor:pointer}
+.clr input[type=text],.clr input:not([type=color]){flex:1;min-width:0;font-family:monospace}
+.pv{--n:#12318f;--b:#1d4fd8;--s:#4db3f5;border-radius:18px;overflow:hidden;border:1px solid var(--line);max-width:520px}
+.pv .pvh{background:#fff;color:var(--n);font-weight:700;padding:10px 16px}
+.pv .pvhero{background:linear-gradient(180deg,var(--n),var(--b) 55%,var(--s));color:#fff;text-align:center;padding:26px 12px 22px;font-weight:700;font-size:22px;line-height:1.2}
+.pv .pvhero small{display:block;font-size:13px;font-weight:500;opacity:.9;margin-top:6px}
+.pv .pvb{padding:16px;background:#fff;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pv .pvbtn{background:var(--n);color:#fff;border-radius:99px;padding:6px 18px;font-weight:600;font-size:13px}
+.pv .pvcard{background:linear-gradient(160deg,var(--b),var(--s));color:#fff;border-radius:12px;padding:6px 16px;font-weight:600;font-size:13px}
+.pv .pvf{background:var(--n);color:#fff;padding:10px 16px;font-size:13px}
+/* ช่องทางติดต่อ */
+.crow{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr) minmax(0,1.5fr) auto;gap:10px;align-items:start;margin-bottom:10px;padding:12px;background:#fafbff;border:1px solid var(--line);border-radius:16px}
+.crow .cl{display:flex;gap:8px;align-items:center;min-width:0}
+.crow .cl img{width:36px;height:36px;object-fit:contain;border-radius:50%;background:#fff;border:1px solid var(--line);flex:none}
+/* ปุ่ม */
+.btn{border:0;border-radius:13px;padding:11px 22px;font-weight:600;background:var(--brand);color:#fff;min-height:44px}
+.btn:hover{filter:brightness(1.08)}
+.btn.r{background:var(--coral)}.btn.o{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn.s{padding:6px 14px;font-size:13px;border-radius:10px;min-height:34px;display:inline-flex;align-items:center}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.savebar{position:sticky;bottom:14px;z-index:20;display:flex;justify-content:flex-end;gap:10px;padding:12px 16px;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px -10px rgba(12,19,36,.25)}
+.item{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px 26px;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.item .th{width:72px;height:72px;border-radius:14px;background:#e9edf6;overflow:hidden;display:grid;place-items:center;font-size:11px;color:var(--mute)}
+.item .th img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.item .tx{min-width:0}
+.item b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .meta{display:block;font-size:13px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .acts{display:flex;gap:8px}
+.empty{text-align:center;color:var(--mute);padding:44px 10px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;z-index:99;max-width:90vw}
+.toast.bad{background:var(--coral)}
+.dlg-bg{position:fixed;inset:0;z-index:200;background:rgba(12,19,36,.45);backdrop-filter:blur(4px);display:grid;place-items:center;padding:16px}
+.dlg{width:min(420px,100%);background:#fff;border-radius:24px;padding:26px;box-shadow:0 30px 70px -20px rgba(12,19,36,.5)}
+.dlg h3{margin:0 0 6px;font-size:19px}.dlg p{margin:0 0 18px;color:var(--mute)}.dlg .row{display:flex;gap:8px;justify-content:flex-end}
+.note{background:#fff8e1;border:1px solid #ffe08a;border-radius:14px;padding:10px 14px;font-size:13.5px}
+
+.imgrow{grid-template-columns:64px minmax(0,1fr) auto auto;align-items:center}
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:14px}
+.icard{border:1px solid var(--line);border-radius:16px;background:#fff;padding:8px;text-align:left;display:flex;flex-direction:column;gap:6px;min-width:0}
+.icard:hover{border-color:var(--brand);box-shadow:var(--sh)}
+.icard .im{aspect-ratio:1;border-radius:11px;background:#e9edf6;overflow:hidden;display:grid;place-items:center;font-size:12px;color:var(--mute);text-align:center}
+.icard .im img{width:100%;height:100%;object-fit:contain;background:#fff}
+.icard b{font-size:12.5px;line-height:1.35;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.icard small{color:var(--mute);font-size:11.5px}
+.badge.warn{background:#fff3d6;color:#9a5b00}
+.hd .tools{display:flex;gap:8px;flex-wrap:wrap}
+.item .acts{flex-wrap:wrap}
+code{background:#eef2ff;padding:1px 6px;border-radius:6px;font-size:12.5px}
+@media(max-width:860px){.imgrow{grid-template-columns:1fr}}
+@media(max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static;flex-direction:row;overflow-x:auto;border-radius:18px;scrollbar-width:none;max-height:none}
+  .side button{white-space:nowrap}.side hr,.side .sh{display:none}
+  .g{grid-template-columns:1fr}
+  .sec>.hd,.sec>.bd{padding-left:18px;padding-right:18px}
+  .item{padding:12px 18px;grid-template-columns:60px minmax(0,1fr)}
+  .item .th{width:60px;height:60px}
+  .item .acts{grid-column:1/-1}
+  .upl{flex-direction:column;align-items:flex-start}
+  .upl .acts{width:100%}
+  .crow{grid-template-columns:1fr}
+  nav a{display:none}
+}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <div class="logo"><span id="siteName">พรรคคอนนิวเตอร์</span><span class="badge">ผู้ดูแล</span></div>
+  <nav><a href="index.html" target="_blank" rel="noopener">ดูหน้าเว็บ ↗</a><button id="outBtn" class="hide">ออกจากระบบ</button></nav>
+</div></header>
+<main id="app"></main>
+
+<script>
+const db=supabase.createClient('https://aefzegkgfwszuiznihsk.supabase.co','sb_publishable_Z1zogpI9qqUlegxG816ncQ_eHeaiFvr',{auth:{detectSessionInUrl:false,lock:async(n,t,fn)=>await fn()}});
+const $=id=>document.getElementById(id);
+const e=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const NAME_TH='พรรคคอนนิวเตอร์',NAME_EN='Connor Newte',OLD_NAMES=['พรรคคอนเน็กซ์','Connext Party'];
+const LOGIN_EMAIL='m40@example.com';
+const HEX=/^#[0-9a-f]{6}$/i;
+function toast(m,bad){const t=document.createElement('div');t.className='toast'+(bad?' bad':'');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200);}
+const fail=(m,err)=>{console.error(err);toast(m+': '+(err?.message||err),true);};
+function confirmBox(title,msg){
+  return new Promise(res=>{const bg=document.createElement('div');bg.className='dlg-bg';
+    bg.innerHTML=`<div class="dlg" role="dialog" aria-modal="true"><h3>${e(title)}</h3><p>${e(msg)}</p><div class="row"><button class="btn o" id="n">ยกเลิก</button><button class="btn r" id="y">ลบ</button></div></div>`;
+    document.body.appendChild(bg);bg.querySelector('#n').focus();
+    const d=v=>{bg.remove();res(v);};bg.querySelector('#n').onclick=()=>d(false);bg.querySelector('#y').onclick=()=>d(true);bg.onclick=ev=>{if(ev.target===bg)d(false);};});
+}
+
+/* แปลงลิงก์ให้เป็นลิงก์รูปตรง (ตัวเดียวกับหน้าเว็บ) */
+function fixUrl(u){
+  u=String(u||'').trim();if(!u)return '';
+  let m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/)||u.match(/drive\.google\.com\/(?:open|uc|thumbnail)\?(?:[^#]*&)?id=([\w-]+)/);
+  if(m)return 'https://lh3.googleusercontent.com/d/'+m[1];
+  if(/dropbox\.com/.test(u))return u.replace('www.dropbox.com','dl.dropboxusercontent.com').replace(/[?&]dl=0/,'').replace(/[?&]raw=1/,'');
+  m=u.match(/^https?:\/\/imgur\.com\/(\w+)$/);
+  if(m)return 'https://i.imgur.com/'+m[1]+'.jpg';
+  if(/^\/\//.test(u))return 'https:'+u;
+  if(/^[\w-]+(\.[\w-]+)+\/.+/.test(u)&&!/^https?:|^data:|^\//.test(u))return 'https://'+u;
+  return u;
+}
+
+/* ---------- อัปโหลดรูป/ไฟล์ ---------- */
+function resize(file,max=1600){
+  return new Promise((res,rej)=>{
+    const im=new Image();
+    im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      const png=file.type==='image/png';c.toBlob(b=>b?res({blob:b,ext:png?'png':'jpg',type:png?'image/png':'image/jpeg'}):rej(new Error('แปลงรูปไม่สำเร็จ')),png?'image/png':'image/jpeg',.88);};
+    im.onerror=()=>rej(new Error('อ่านไฟล์รูปไม่ได้'));im.src=URL.createObjectURL(file);
+  });
+}
+async function uploadFile(file,prefix){
+  let blob=file,ext='pdf',type='application/pdf';
+  if(file.type.startsWith('image/')){const r=await resize(file);blob=r.blob;ext=r.ext;type=r.type;}
+  else if(file.type!=='application/pdf') throw new Error('รองรับเฉพาะรูปภาพและ PDF');
+  const path=`cp/${prefix}-${Date.now()}.${ext}`;
+  const up=await db.storage.from('site-assets').upload(path,blob,{contentType:type});
+  if(up.error) throw up.error;
+  return db.storage.from('site-assets').getPublicUrl(path).data.publicUrl;
+}
+const upErr=err=>/bucket|not found/i.test(err.message)?{message:'ยังไม่ได้รัน setup.sql'}:err;
+/* ช่องรูป: อัปโหลดไฟล์ หรือ วางลิงก์ก็ได้ */
+const upHtml=(id,label,accept='image/*',cls='')=>`<div class="${cls}"><label class="lbl">${label}</label><div class="upl"><div class="thumb" id="${id}_t"></div><div class="acts"><div class="row"><label class="btn o s">เลือกไฟล์<input id="${id}_f" type="file" accept="${accept}" hidden></label><button class="btn o s" type="button" id="${id}_x">ลบ</button>${/image/.test(accept)?`<button class="btn o s" type="button" id="${id}_pk">เลือกจากรูปที่มีแล้ว</button>`:''}</div><div class="lk"><input id="${id}_u" type="url" inputmode="url" placeholder="หรือวางลิงก์ (Google Drive / Dropbox / ลิงก์ตรง)"><button class="btn s" type="button" id="${id}_ub">ใช้ลิงก์</button></div><span class="name" id="${id}_n"></span></div></div></div>`;
+function bindUp(id,state,key,isPdf,onPaint){
+  const paint=()=>{const u=state[key]||'';
+    $(id+'_t').innerHTML=u?(HEX.test(u)?`<span style="display:block;width:100%;height:100%;border-radius:10px;background:${u}"></span>`:isPdf||/\.pdf($|\?)/i.test(u)?'PDF<br>แนบแล้ว':`<img src="${e(fixUrl(u))}" alt="" referrerpolicy="no-referrer">`):'ไม่มีไฟล์';
+    $(id+'_n').textContent=u?(HEX.test(u)?'ใช้สี '+u:u.includes('/storage/v1/')?'อัปโหลดแล้ว':'ใช้ลิงก์'):'ยังไม่ได้เลือกไฟล์หรือลิงก์';
+    $(id+'_u').value=u&&!HEX.test(u)&&!u.includes('/storage/v1/')?u:'';
+    if(onPaint)onPaint();};
+  paint();
+  $(id+'_f').onchange=async ev=>{const f=ev.target.files[0];if(!f)return;
+    try{toast('กำลังอัปโหลด...');state[key]=await uploadFile(f,key);paint();toast('อัปโหลดแล้ว กด "บันทึก" เพื่อใช้งาน');}
+    catch(err){fail('อัปโหลดไม่สำเร็จ',upErr(err));}};
+  const useLink=()=>{const v=$(id+'_u').value.trim();if(!v)return toast('กรุณาวางลิงก์ก่อน',true);
+    if(!/^(https?:\/\/|\/\/|[\w-]+\.[\w.-]+\/)/i.test(v))return toast('ลิงก์ไม่ถูกต้อง',true);
+    state[key]=v;paint();toast('ใช้ลิงก์แล้ว กด "บันทึก" เพื่อใช้งาน');};
+  $(id+'_ub').onclick=useLink;
+  $(id+'_u').onkeydown=ev=>{if(ev.key==='Enter'){ev.preventDefault();useLink();}};
+  $(id+'_x').onclick=()=>{state[key]='';paint();};
+  if($(id+'_pk'))$(id+'_pk').onclick=async()=>{const u=await pickImage();if(u){state[key]=u;paint();toast('เลือกรูปแล้ว กด "บันทึก" เพื่อใช้งาน');}};
+  return paint;
+}
+/* พื้นหลังแบบ "สี หรือ รูป" (เก็บเป็นค่าเดียว: รหัสสี #rrggbb หรือ ลิงก์รูป) */
+const bgHtml=(id,label,cls='full')=>`<div class="${cls}"><label class="lbl">${label}</label><div class="clr" style="margin-bottom:12px"><input type="color" id="${id}_c" value="#1d4fd8" aria-label="${label}"><input id="${id}_h" placeholder="รหัสสี เช่น #1d4fd8 (เว้นว่าง = ไม่ใช้สี)" maxlength="7" spellcheck="false"></div>${upHtml(id,'หรือใช้รูปเป็นพื้นหลัง')}<span class="hint">เลือกสีหรือรูปอย่างใดอย่างหนึ่ง (อันที่ตั้งล่าสุดจะถูกใช้) · กด "ลบ" ในช่องรูปเพื่อล้างค่า · เว้นว่าง = ใช้พื้นหลังเดิมของเว็บ</span></div>`;
+function bindBg(id,state,key){
+  const sync=()=>{const u=state[key]||'';$(id+'_h').value=HEX.test(u)?u:'';if(HEX.test(u))$(id+'_c').value=u;};
+  const paint=bindUp(id,state,key,false,sync);
+  $(id+'_c').oninput=ev=>{state[key]=ev.target.value.toLowerCase();paint();};
+  $(id+'_h').oninput=ev=>{let v=ev.target.value.trim();if(v&&v[0]!=='#')v='#'+v;
+    if(HEX.test(v)){state[key]=v.toLowerCase();$(id+'_c').value=v;paint();}
+    else if(!v&&HEX.test(state[key]||'')){state[key]='';paint();}};
+}
+
+/* เลือกรูปที่เคยเพิ่มไว้แล้วจากทุกเมนู (ไม่ต้องอัปโหลดซ้ำ) */
+async function collectImages(){
+  const names=Object.keys(T);
+  const [s,...ts]=await Promise.all([db.from('cp_settings').select('*'),...names.map(t=>db.from(t).select('*'))]);
+  const out=[],seen=new Set();
+  const add=(g,label,url)=>{url=String(url||'').trim();if(!url||HEX.test(url)||/\.pdf($|\?)/i.test(url)||!/^(https?:)?\/\//i.test(url)||/\s/.test(url)||seen.has(url))return;seen.add(url);out.push({g,label,url});};
+  const c=Object.fromEntries((s.data||[]).map(x=>[x.key,x.value]));
+  const lab={};SETTINGS.forEach(([h,,fs])=>fs.forEach(([k,l])=>{lab[k]=[h,l];}));
+  Object.entries(c).forEach(([k,v])=>{if(['instagram','facebook'].includes(k))return;const L=lab[k]||['ตั้งค่าเว็บ',k];add(L[0],L[1],v);});
+  try{JSON.parse(c.contacts||'[]').forEach(x=>add('ช่องทางติดต่อ','โลโก้ '+(x.label||x.name||''),x.logo||x.icon));}catch(_){}
+  try{JSON.parse(c.custom_pages||'[]').forEach(p=>(p.images||[]).forEach((u,n)=>add('หน้าเว็บเพิ่มเติม',`${p.title||'หน้าใหม่'} · รูปที่ ${n+1}`,u)));}catch(_){}
+  names.forEach((t,i)=>{const cf=T[t];(ts[i].data||[]).forEach(r=>{const n=cf.title_f(r)||'(ไม่มีชื่อ)';add(cf.title,n,r[cf.img]);add(cf.title,'พื้นหลัง · '+n,r.bg);});});
+  return out;
+}
+function pickImage(){
+  return new Promise(res=>{
+    const bg=document.createElement('div');bg.className='dlg-bg';
+    bg.innerHTML='<div class="dlg" style="width:min(780px,100%);max-height:88vh;overflow:auto"><h3>เลือกจากรูปที่เพิ่มไว้แล้ว</h3><p>กดรูปที่ต้องการใช้ซ้ำ ไม่ต้องอัปโหลดใหม่ (รูปที่ซ้ำกันแสดงครั้งเดียว)</p><div id="pkb" class="empty">กำลังโหลด...</div><div class="row" style="margin-top:14px"><button class="btn o" id="pkx">ปิด</button></div></div>';
+    document.body.appendChild(bg);
+    const d=v=>{bg.remove();res(v);};
+    bg.querySelector('#pkx').onclick=()=>d('');bg.onclick=ev=>{if(ev.target===bg)d('');};
+    collectImages().then(L=>{
+      const box=bg.querySelector('#pkb');
+      if(!L.length){box.textContent='ยังไม่มีรูปที่เพิ่มไว้';return;}
+      box.className='';
+      box.innerHTML=[...new Set(L.map(x=>x.g))].map(g=>`<h4 style="margin:14px 0 8px">${e(g)}</h4><div class="igrid">${L.map((x,i)=>x.g===g?`<button type="button" class="icard" data-i="${i}"><div class="im"><img src="${e(fixUrl(x.url))}" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.replaceWith(document.createTextNode('โหลดรูปไม่ได้'))"></div><b>${e(x.label)}</b></button>`:'').join('')}</div>`).join('');
+      box.querySelectorAll('.icard').forEach(b=>b.onclick=()=>d(L[+b.dataset.i].url));
+    }).catch(err=>{bg.querySelector('#pkb').textContent='โหลดไม่สำเร็จ: '+(err.message||err);});
+  });
+}
+
+/* ---------- ตาราง ---------- */
+const T={
+ cp_slides:{bulk:['name','role'],title:'สไลด์หน้าแรก',sub:'รูปคนตัดพื้นหลัง (PNG โปร่งใส) เห็นหลายคนเรียงกัน เลื่อนดูได้',title_f:r=>r.name,desc_f:r=>r.role,img:'image_url',order:'sort',
+  f:[['name','ชื่อที่แสดง','text'],['role','ตำแหน่ง/คำอธิบาย','text'],['image_url','รูป (PNG พื้นหลังโปร่ง)','image'],['sort','ลำดับ','number']]},
+ cp_policies:{bulk:['title','description'],title:'นโยบายพรรค',sub:'โปสเตอร์นโยบาย กดดูรายละเอียดได้ในหน้าเว็บ',title_f:r=>r.title,desc_f:r=>r.status==='done'?'ทำแล้ว':'กำลังดำเนินการ',img:'image_url',order:'sort',
+  f:[['title','ชื่อนโยบาย','text'],['status','สถานะ','select',[['doing','กำลังดำเนินการ'],['done','ทำแล้ว']]],['description','รายละเอียด','textarea'],['image_url','รูปโปสเตอร์','image'],['sort','ลำดับ','number']]},
+ cp_why:{bulk:['title','description'],title:'ทำไมต้องคอนนิวเตอร์',sub:'การ์ดเหตุผลที่ควรเลือกพรรค',title_f:r=>r.title,desc_f:r=>r.description,img:'image_url',order:'sort',
+  f:[['title','หัวข้อ','text'],['description','คำอธิบายสั้น','textarea'],['image_url','รูป','image'],['sort','ลำดับ','number']]},
+ cp_members:{bulk:['nickname','role','class_name','full_name'],title:'สมาชิกพรรค',sub:'จัดกลุ่มตามห้องอัตโนมัติ (ช่อง "ห้อง" เช่น ม.5/7)',title_f:r=>r.nickname,desc_f:r=>[r.class_name,r.role].filter(Boolean).join(' · '),img:'image_url',order:'sort',
+  f:[['nickname','ชื่อเล่น','text'],['role','ตำแหน่ง','text'],['class_name','ห้อง','text'],['full_name','ชื่อ-นามสกุล','text'],['image_url','รูป (สัดส่วน 4:5 แนวตั้ง จะพอดีที่สุด)','image'],['bg','พื้นหลังการ์ดของคนนี้ (ไม่ใส่ = ใช้พื้นหลังกลางของสมาชิก)','bg'],['sort','ลำดับ','number']]},
+ cp_leaders:{bulk:['full_name','position'],title:'ประวัติแกนนำ',sub:'ประสบการณ์/รางวัล: พิมพ์หนึ่งบรรทัดต่อหนึ่งข้อ',title_f:r=>r.full_name,desc_f:r=>r.position,img:'image_url',order:'sort',
+  f:[['full_name','ชื่อ-นามสกุล','text'],['position','ตำแหน่ง','text'],['image_url','รูป','image'],['bg','พื้นหลังรูปของคนนี้ (ไม่ใส่ = ใช้พื้นหลังกลางของประวัติแกนนำ)','bg'],['sort','ลำดับ','number'],['experience','ประสบการณ์การทำงาน (บรรทัดละข้อ)','textarea'],['awards','รางวัลและความสำเร็จ (บรรทัดละข้อ)','textarea']]},
+ cp_news:{bulk:['title','body'],title:'ข่าวกิจกรรม',sub:'ข่าวใหม่จะขึ้นก่อน',title_f:r=>r.title,desc_f:r=>r.published_at,img:'image_url',order:'published_at',
+  f:[['title','หัวข้อข่าว','text'],['published_at','วันที่','date'],['body','เนื้อหา','textarea'],['image_url','รูปปก','image']]}
+};
+const getTabs=()=>[{h:'เครื่องมือ'},['poster','สร้างโปสเตอร์อัตโนมัติ'],{h:'ตั้งค่าเว็บ'},...SETTINGS.map((x,i)=>['set:'+i,x[0]]),{h:'เนื้อหา'},...Object.entries(T).map(([k,v])=>[k,v.title]),['pages','หน้าเว็บเพิ่มเติม'],{h:'ภาพรวม'},['imgs','รูปที่เพิ่มไว้ทั้งหมด']];
+const S={admin:false,tab:'set:0',pg:null};
+
+/* ---------- auth ---------- */
+function renderLogin(){
+  $('app').innerHTML=`<div class="sec" style="max-width:420px;margin:30px auto"><div class="hd"><h2>เข้าสู่ระบบผู้ดูแล</h2><p>ใช้บัญชีที่ได้รับสิทธิ์แอดมิน</p></div><div class="bd">
+  <label class="lbl">อีเมล</label><input id="em" type="email" autocomplete="username" value="${LOGIN_EMAIL}">
+  <label class="lbl" style="margin-top:16px">รหัสผ่าน</label><input id="pw" type="password" autocomplete="current-password">
+  <button class="btn" id="li" style="margin-top:20px;width:100%">เข้าสู่ระบบ</button></div></div>`;
+  $('pw').focus();
+  $('em').onkeydown=ev=>{if(ev.key==='Enter')$('pw').focus();};
+  $('pw').onkeydown=ev=>{if(ev.key==='Enter')$('li').click();};
+  $('li').onclick=async()=>{
+    const r=await db.auth.signInWithPassword({email:$('em').value.trim(),password:$('pw').value});
+    if(r.error) return toast('อีเมลหรือรหัสผ่านไม่ถูกต้อง',true);
+    if(!await checkAdmin()){await db.auth.signOut();return toast('บัญชีนี้ไม่มีสิทธิ์ผู้ดูแล',true);}
+    render();
+  };
+}
+async function checkAdmin(){const r=await db.rpc('is_admin');S.admin=r.data===true;$('outBtn').classList.toggle('hide',!S.admin);return S.admin;}
+$('outBtn').onclick=async()=>{await db.auth.signOut();S.admin=false;$('outBtn').classList.add('hide');renderLogin();};
+
+function render(){
+  const _keepY=window.scrollY||0;
+  const _keepSide=document.querySelector('.side')?.scrollTop||0;
+  $('app').innerHTML=`<div class="shell"><aside class="side">${getTabs().map(t=>t.h?`<div class="sh">${t.h}</div>`:`<button data-t="${t[0]}" class="${S.tab===t[0]?'on':''}">${t[1]}</button>`).join('')}</aside><div class="content" id="body"></div></div>`;
+  document.querySelectorAll('.side button').forEach(b=>b.onclick=()=>{const y=window.scrollY||0;const sideY=document.querySelector('.side')?.scrollTop||0;S.tab=b.dataset.t;S.pg=null;render();requestAnimationFrame(()=>{window.scrollTo(0,y);const side=document.querySelector('.side');if(side)side.scrollTop=sideY;});});
+  requestAnimationFrame(()=>{window.scrollTo(0,_keepY);const side=document.querySelector('.side');if(side)side.scrollTop=_keepSide;});
+  if(S.tab.startsWith('set:'))tabSettings(+S.tab.slice(4));
+  else if(S.tab==='poster')tabPoster();
+  else if(S.tab==='pages')tabPages();
+  else if(S.tab==='imgs')tabImgs();
+  else tabList(S.tab);
+}
+
+/* ---------- ธีมสี ---------- */
+const THEME_KEYS=[['theme_navy','สีหลัก (เข้ม) — หัวข้อ ปุ่ม ท้ายเว็บ'],['theme_blue','สีรอง — การ์ด ไล่สีพื้นหลัง'],['theme_sky','สีอ่อน — ไฮไลต์ ขอบไล่สี']];
+const DEF={theme_navy:'#12318f',theme_blue:'#1d4fd8',theme_sky:'#4db3f5'};
+const PRESETS=[
+ ['น้ำเงิน (ค่าเริ่มต้น)','#12318f','#1d4fd8','#4db3f5'],
+ ['ชมพู','#9d174d','#db2777','#f472b6'],
+ ['แดง','#991b1b','#dc2626','#f87171'],
+ ['ส้ม','#9a3412','#ea580c','#fb923c'],
+ ['ทอง','#854d0e','#d97706','#fbbf24'],
+ ['เขียว','#14532d','#16a34a','#4ade80'],
+ ['เขียวมิ้นต์','#115e59','#0d9488','#2dd4bf'],
+ ['ม่วง','#4c1d95','#7c3aed','#a78bfa']
+];
+function themeHtml(c){
+  const val=k=>HEX.test(c[k]||'')?c[k]:DEF[k];
+  return `<div class="full"><label class="lbl">ชุดสีสำเร็จรูป (กดเพื่อเลือก แล้วปรับเองต่อได้)</label><div class="presets">${PRESETS.map((p,i)=>`<button type="button" class="pst" data-p="${i}"><i style="background:${p[1]}"></i><i style="background:${p[2]}"></i><i style="background:${p[3]}"></i><span>${p[0]}</span></button>`).join('')}</div></div>
+  ${THEME_KEYS.map(([k,l])=>`<div><label class="lbl">${l}</label><div class="clr"><input type="color" id="s_${k}" value="${val(k)}" aria-label="${l}"><input id="s_${k}_h" value="${val(k)}" maxlength="7" spellcheck="false"></div></div>`).join('')}
+  <div class="full"><label class="lbl">ตัวอย่างสี</label><div class="pv" id="pv"><div class="pvh">${e(NAME_TH)}</div><div class="pvhero">ข้อความใหญ่หน้าแรก<small>พื้นหลังไล่สีจากสีหลัก → สีรอง → สีอ่อน</small></div><div class="pvb"><span class="pvbtn">ปุ่ม</span><span class="pvcard">การ์ด</span></div><div class="pvf">ท้ายเว็บ · ติดต่อเรา</div></div><span class="hint">กด "บันทึก" แล้วหน้าเว็บจะอัปเดตเองภายในไม่กี่วินาที</span></div>`;
+}
+function bindTheme(){
+  const pv=$('pv'),map={theme_navy:'--n',theme_blue:'--b',theme_sky:'--s'};
+  const paint=()=>THEME_KEYS.forEach(([k])=>pv.style.setProperty(map[k],$('s_'+k).value));
+  THEME_KEYS.forEach(([k])=>{
+    $('s_'+k).oninput=ev=>{$('s_'+k+'_h').value=ev.target.value;paint();};
+    $('s_'+k+'_h').oninput=ev=>{let v=ev.target.value.trim();if(v&&v[0]!=='#')v='#'+v;if(HEX.test(v)){$('s_'+k).value=v.toLowerCase();paint();}};
+  });
+  document.querySelectorAll('.pst').forEach(b=>b.onclick=()=>{const p=PRESETS[b.dataset.p];
+    THEME_KEYS.forEach(([k],i)=>{$('s_'+k).value=p[i+1];$('s_'+k+'_h').value=p[i+1];});paint();});
+  paint();
+}
+
+/* ---------- ช่องทางติดต่อ ---------- */
+function bindContacts(ct){
+  const draw=()=>{
+    $('ctl').innerHTML=ct.map((x,i)=>`<div class="crow" data-i="${i}"><input data-f="label" placeholder="ชื่อ เช่น LINE" value="${e(x.label)}"><input data-f="url" placeholder="ลิงก์ / เบอร์โทร / อีเมล" value="${e(x.url)}"><div class="cl">${x.logo?`<img src="${e(fixUrl(x.logo))}" alt="" referrerpolicy="no-referrer">`:''}<input data-f="logo" placeholder="ลิงก์โลโก้ (เว้นว่าง = ไอคอนอัตโนมัติ)" value="${e(x.logo)}"><label class="btn o s">อัปโหลด<input type="file" accept="image/*" data-up hidden></label></div><button type="button" class="btn o s" data-rm>ลบ</button></div>`).join('')||'<div class="empty" style="padding:18px">ยังไม่มีช่องทางติดต่อ กด "+ เพิ่มช่องทาง"</div>';
+  };
+  draw();
+  const ix=el=>Number(el.closest('.crow').dataset.i);
+  $('ctl').oninput=ev=>{const f=ev.target.dataset.f;if(f)ct[ix(ev.target)][f]=ev.target.value;};
+  $('ctl').onchange=async ev=>{
+    if(ev.target.dataset.f==='logo'){draw();return;}
+    if(ev.target.hasAttribute('data-up')){const f=ev.target.files[0];if(!f)return;const i=ix(ev.target);
+      try{toast('กำลังอัปโหลด...');ct[i].logo=await uploadFile(f,'contact');draw();toast('อัปโหลดโลโก้แล้ว');}catch(err){fail('อัปโหลดไม่สำเร็จ',upErr(err));}}
+  };
+  $('ctl').onclick=ev=>{if(ev.target.hasAttribute('data-rm')){ct.splice(ix(ev.target),1);draw();}};
+  $('ctadd').onclick=()=>{ct.push({label:'',url:'',logo:''});draw();const r=$('ctl').querySelectorAll('.crow');r[r.length-1].querySelector('input').focus();};
+}
+
+/* ---------- ตั้งค่าเว็บ ---------- */
+/* [key, label, type, options|hint, full?] */
+const MENU_KEYS=[['menu_home','หน้าหลัก'],['menu_about','เกี่ยวกับพรรค'],['menu_history','ประวัติแกนนำ'],['menu_members','สมาชิกพรรค'],['menu_policies','นโยบายพรรค'],['menu_news','ข่าวกิจกรรม']];
+const SETTINGS=[
+ ['ข้อมูลทั่วไป','แสดงที่แถบด้านบน ท้ายเว็บ และชื่อแท็บ',[
+   ['site_name','ชื่อพรรค/เว็บไซต์','text'],['site_en','ชื่อภาษาอังกฤษ (ท้ายเว็บ)','text'],
+   ['site_logo','โลโก้ (PNG พื้นหลังโปร่ง)','image'],['page_hero','รูปพื้นหลังแบนเนอร์หน้าย่อย','image']]],
+ ['ชื่อเมนูบนเว็บ','เปลี่ยนชื่อเมนูด้านบนของหน้าเว็บได้ (ล้างช่องแล้วบันทึก = กลับเป็นชื่อเดิม) · หน้าที่เพิ่มเองตั้งชื่อเมนูได้ที่ "หน้าเว็บเพิ่มเติม"',
+   MENU_KEYS.map(([k,l])=>[k,'ชื่อเมนู: '+l,'text'])],
+ ['สีเว็บไซต์','เปลี่ยนโทนสีทั้งเว็บได้เอง เลือกชุดสีสำเร็จรูป หรือกำหนดสีเองด้วยรหัสสี',[
+   ['','','theme']]],
+ ['ช่องทางติดต่อ','เบอร์โทรเปิด/ปิดการแสดงได้ · แสดงที่ท้ายเว็บทุกหน้า เพิ่มกี่ช่องทางก็ได้ ใส่โลโก้ของตัวเองได้ (ไม่ใส่ ระบบเลือกไอคอนให้จากลิงก์ เช่น Instagram, Facebook, LINE, TikTok, YouTube)',[
+   ['phone_on','แสดงเบอร์โทรที่ท้ายเว็บ','select',[['true','เปิด (แสดง)'],['false','ปิด (ซ่อน)']]],['phone_number','หมายเลขโทรศัพท์','text'],
+   ['contacts','','contacts','',1]]],
+ ['พื้นหลังสมาชิก','ตั้งครั้งเดียวใช้กับการ์ดสมาชิกทุกคน ทั้งแบบสีล้วนหรือรูป · ถ้าอยากตั้งเฉพาะบางคน ไปที่เมนู "สมาชิกพรรค" แล้วกดแก้ไขคนนั้น',[
+   ['member_card_bg','พื้นหลังสมาชิก (ใช้กับทุกคน)','bg','',1]]],
+ ['พื้นหลังประวัติแกนนำ','ตั้งครั้งเดียวใช้กับรูปแกนนำทุกคน ทั้งแบบสีล้วนหรือรูป · ถ้าอยากตั้งเฉพาะบางคน ไปที่เมนู "ประวัติแกนนำ" แล้วกดแก้ไขคนนั้น',[
+   ['leader_bg','พื้นหลังรูปแกนนำ (ใช้กับทุกคน)','bg','',1]]],
+ ['หน้าแรก','ข้อความใหญ่บนสไลด์ และวิสัยทัศน์',[
+   ['hero_1','ข้อความใหญ่ บรรทัดบน','text'],['hero_2','ข้อความใหญ่ บรรทัดล่าง','text'],
+   ['vision_title','หัวข้อวิสัยทัศน์','text'],['why_title','หัวข้อส่วน "ทำไมต้อง..."','text'],
+   ['vision','วิสัยทัศน์','textarea','',1]]],
+ ['นับถอยหลัง','ต้องตั้งวัน-เวลา ตัวเลขถึงจะเดินถอยหลัง (ตั้งตามเวลาในเครื่องที่ใช้แอดมิน)',[
+   ['cd_title','หัวข้อ','text'],['cd_sub','ข้อความรอง','text'],
+   ['countdown','วัน-เวลาเลือกตั้ง','datetime','เลือกวันและเวลาที่ต้องการให้นับถอยหลังไปถึง'],
+   ['cd_bg','พื้นหลังส่วนนับถอยหลัง (สีหรือรูป)','bg','',1],['cd_image','รูปใต้ตัวเลขนับถอยหลัง (ไม่บังคับ)','image','',1]]],
+ ['ป๊อบอัปประกาศ','แสดงทุกครั้งที่เปิดหรือรีเฟรชเว็บ ถ้าใส่รูป จะแสดงเฉพาะรูป และปรับขนาดให้พอดีหน้าจออัตโนมัติ',[
+   ['popup_on','สถานะ','select',[['true','เปิด'],['false','ปิด']]],['popup_date','วันที่ท้ายประกาศ','text'],
+   ['popup_title','หัวข้อ','text','',1],['popup_body','เนื้อหา','textarea','',1],
+   ['popup_image','รูปประกาศ (ไม่บังคับ)','image','',1]]],
+ ['หน้าย่อย','หัวข้อบนแบนเนอร์แต่ละหน้า',[
+   ['about_title','เกี่ยวกับพรรค: หัวข้อ','text'],['about_sub','เกี่ยวกับพรรค: ข้อความรอง','text'],
+   ['about_text','เกี่ยวกับพรรค: ข้อความ','textarea','',1],['about_pdf','เอกสารแนะนำพรรค (PDF)','pdf','',1],
+   ['hist_title','ประวัติแกนนำ: หัวข้อ','text'],['hist_sub','ประวัติแกนนำ: ข้อความรอง','text'],
+   ['mem_sub','สมาชิก: ข้อความรอง','text'],['pol_title','นโยบาย: หัวข้อ','text'],['pol_sub','นโยบาย: ข้อความรอง','text']]]
+];
+async function tabSettings(idx=0){
+  const r=await db.from('cp_settings').select('*');
+  if(r.error) return $('body').innerHTML=`<div class="sec"><div class="hd"><h2>โหลดไม่สำเร็จ</h2><p>${e(r.error.message)} — ตรวจสอบว่ารัน setup.sql แล้ว</p></div></div>`;
+  const c=Object.fromEntries((r.data||[]).map(x=>[x.key,x.value]));
+  if(!c.site_name||OLD_NAMES.includes(c.site_name))c.site_name=NAME_TH;
+  if(!c.site_en||OLD_NAMES.includes(c.site_en))c.site_en=NAME_EN;
+  if(!c.hero_1||c.hero_1==='ตราษฯ')c.hero_1=c.hero_1||NAME_TH;
+  MENU_KEYS.forEach(([k,l])=>{if(!c[k])c[k]=l;});
+  if(!c.why_title||c.why_title==='ทำไมต้องคอนเน็กซ์')c.why_title='ทำไมต้องคอนนิวเตอร์';
+  const st={};
+  let ct=[];
+  try{const p=JSON.parse(c.contacts||'[]');if(Array.isArray(p))ct=p.map(x=>({label:x.label||x.name||'',url:x.url||x.href||'',logo:x.logo||x.icon||''}));}catch(_){}
+  if(!ct.length){if(c.instagram)ct.push({label:'Instagram',url:c.instagram,logo:''});if(c.facebook)ct.push({label:'Facebook',url:c.facebook,logo:''});}
+  const field=([k,l,t,o,full])=>{
+    const cls=full?'full':'';
+    if(t==='theme') return themeHtml(c);
+    if(t==='contacts') return `<div class="full"><div id="ctl"></div><button type="button" class="btn o s" id="ctadd">+ เพิ่มช่องทาง</button><span class="hint">ช่อง "ลิงก์" ใส่ได้ทั้งลิงก์เว็บ เบอร์โทร (เช่น 0812345678) หรืออีเมล · โลโก้ใส่เป็นลิงก์หรืออัปโหลดก็ได้</span></div>`;
+    if(t==='bg'){st[k]=c[k]||'';return bgHtml('b_'+k,l,cls);}
+    if(t==='image'||t==='pdf'){st[k]=c[k]||'';return upHtml('u_'+k,l,t==='pdf'?'application/pdf':'image/*',cls);}
+    if(t==='textarea') return `<div class="full"><label class="lbl">${l}</label><textarea id="s_${k}">${e(c[k]||'')}</textarea></div>`;
+    if(t==='select') return `<div class="${cls}"><label class="lbl">${l}</label><select id="s_${k}">${o.map(x=>`<option value="${x[0]}" ${(c[k]||o[0][0])===x[0]?'selected':''}>${x[1]}</option>`).join('')}</select></div>`;
+    if(t==='datetime'){const v=c[k]?new Date(new Date(c[k])-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,16):'';return `<div class="${cls}"><label class="lbl">${l}</label><input id="s_${k}" type="datetime-local" value="${v}">${o?`<span class="hint">${o}</span>`:''}</div>`;}
+    return `<div class="${cls}"><label class="lbl">${l}</label><input id="s_${k}" value="${e(c[k]||'')}"></div>`;
+  };
+  const secs=[SETTINGS[idx]||SETTINGS[0]];
+  $('body').innerHTML=secs.map(([h,s,fs])=>`<div class="sec"><div class="hd"><h2>${h}</h2><p>${s}</p></div><div class="bd"><div class="g">${fs.map(field).join('')}</div></div></div>`).join('')+`<div class="savebar"><button class="btn" id="save">บันทึก</button></div>`;
+  const flat=secs.flatMap(x=>x[2]);
+  flat.filter(f=>f[2]==='image'||f[2]==='pdf').forEach(f=>bindUp('u_'+f[0],st,f[0],f[2]==='pdf'));
+  flat.filter(f=>f[2]==='bg').forEach(f=>bindBg('b_'+f[0],st,f[0]));
+  if($('pv'))bindTheme();
+  if($('ctl'))bindContacts(ct);
+  $('save').onclick=async()=>{
+    const v={};
+    flat.forEach(([k,l,t])=>{
+      if(t==='theme'){THEME_KEYS.forEach(([tk])=>{const x=$('s_'+tk).value;v[tk]=HEX.test(x)?x.toLowerCase():'';});}
+      else if(t==='contacts'){
+        v.contacts=JSON.stringify(ct.map(x=>({label:(x.label||'').trim(),url:(x.url||'').trim(),logo:(x.logo||'').trim()})).filter(x=>x.url));
+        v.instagram='';v.facebook='';
+      }
+      else if(t==='bg'||t==='image'||t==='pdf') v[k]=st[k]||'';
+      else if(t==='datetime') v[k]=$('s_'+k).value?new Date($('s_'+k).value).toISOString():'';
+      else v[k]=$('s_'+k).value.trim();
+    });
+    MENU_KEYS.forEach(([k,l])=>{if(k in v&&v[k]===l)v[k]='';});
+    if(v.contacts==='[]')v.contacts='';
+    if(v.site_name) $('siteName').textContent=v.site_name;
+    $('save').disabled=true;
+    const w=await db.from('cp_settings').upsert(Object.entries(v).map(([key,value])=>({key,value,updated_at:new Date().toISOString()}))).select();
+    $('save').disabled=false;
+    (w.error||!w.data?.length)?fail('บันทึกไม่สำเร็จ',w.error||{message:'ไม่มีสิทธิ์ หรือเซสชันหมดอายุ'}):toast('บันทึกแล้ว');
+  };
+}
+
+/* ---------- หน้าเว็บเพิ่มเติม ---------- */
+const newId=()=>'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+async function loadPages(){
+  const r=await db.from('cp_settings').select('value').eq('key','custom_pages').maybeSingle();
+  if(r.error)throw r.error;
+  let p=[];try{const j=JSON.parse(r.data?.value||'[]');if(Array.isArray(j))p=j.filter(x=>x&&x.id);}catch(_){}
+  return p.map(x=>({id:x.id,title:x.title||'',sub:x.sub||'',body:x.body||'',images:Array.isArray(x.images)?x.images.filter(Boolean):[],show:x.show!==false}));
+}
+async function savePages(p){
+  const w=await db.from('cp_settings').upsert([{key:'custom_pages',value:JSON.stringify(p),updated_at:new Date().toISOString()}]).select();
+  if(w.error||!w.data?.length)throw w.error||{message:'ไม่มีสิทธิ์ หรือเซสชันหมดอายุ'};
+}
+const loadErr=m=>`<div class="sec"><div class="hd"><h2>โหลดไม่สำเร็จ</h2><p>${e(m)}</p></div></div>`;
+async function tabPages(){
+  let pages;
+  try{pages=await loadPages();}catch(err){return $('body').innerHTML=loadErr(err.message||err);}
+  if(S.pg!=null)return editPage(pages,S.pg);
+  $('body').innerHTML=`<div class="sec"><div class="hd flex"><div><h2>หน้าเว็บเพิ่มเติม <span class="badge">${pages.length}</span></h2><p>เพิ่มหน้าใหม่ให้ขึ้นเป็นเมนูบนเว็บได้ ใส่ข้อความและรูปได้หลายรูป · เปิด/ปิดการแสดงในเมนูได้ · ใช้ปุ่ม ↑ ↓ จัดลำดับเมนู</p></div><button class="btn" id="add">+ เพิ่มหน้า</button></div>
+  ${pages.map((x,i)=>`<div class="item"><div class="th">${x.images[0]?`<img src="${e(fixUrl(x.images[0]))}" alt="" referrerpolicy="no-referrer">`:'ไม่มีรูป'}</div><div class="tx"><b>${e(x.title||'(ไม่มีชื่อ)')}</b><span class="meta">${x.show?'แสดงในเมนู':'ซ่อนจากเมนู'} · ลิงก์ #/p/${e(x.id)}</span></div><div class="acts"><button class="btn o s" data-mv="${i}:-1" ${i===0?'disabled':''} aria-label="เลื่อนขึ้น">↑</button><button class="btn o s" data-mv="${i}:1" ${i===pages.length-1?'disabled':''} aria-label="เลื่อนลง">↓</button><button class="btn o s" data-ed="${i}">แก้ไข</button><button class="btn o s" data-rm="${i}">ลบ</button></div></div>`).join('')||'<div class="empty">ยังไม่มีหน้าเพิ่มเติม กด "+ เพิ่มหน้า"</div>'}</div>`;
+  $('add').onclick=()=>{S.pg='new';tabPages();};
+  document.querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>{S.pg=Number(b.dataset.ed);tabPages();});
+  document.querySelectorAll('[data-mv]').forEach(b=>b.onclick=async()=>{
+    const [i,d]=b.dataset.mv.split(':').map(Number),j=i+d;if(j<0||j>=pages.length)return;
+    [pages[i],pages[j]]=[pages[j],pages[i]];
+    try{await savePages(pages);tabPages();}catch(err){fail('บันทึกไม่สำเร็จ',err);}});
+  document.querySelectorAll('[data-rm]').forEach(b=>b.onclick=async()=>{
+    const i=Number(b.dataset.rm);
+    if(!await confirmBox(`ลบหน้า "${pages[i].title||'นี้'}"?`,'ลบแล้วกู้คืนไม่ได้'))return;
+    pages.splice(i,1);
+    try{await savePages(pages);toast('ลบแล้ว');tabPages();}catch(err){fail('ลบไม่สำเร็จ',err);}});
+}
+function editPage(pages,idx){
+  const isNew=idx==='new',src=isNew?null:pages[idx];
+  if(!isNew&&!src){S.pg=null;return tabPages();}
+  const x=isNew?{id:newId(),title:'',sub:'',body:'',images:[],show:true}:{...src,images:[...src.images]};
+  $('body').innerHTML=`<div class="sec"><div class="hd"><h2>${isNew?'เพิ่ม':'แก้ไข'} · หน้าเว็บเพิ่มเติม</h2></div><div class="bd"><div class="g">
+    <div><label class="lbl">ชื่อเมนู / หัวข้อหน้า</label><input id="pg_t" value="${e(x.title)}"></div>
+    <div><label class="lbl">แสดงในเมนูบนเว็บ</label><select id="pg_s"><option value="true" ${x.show?'selected':''}>แสดง</option><option value="false" ${x.show?'':'selected'}>ซ่อน (เข้าได้ผ่านลิงก์เท่านั้น)</option></select></div>
+    <div class="full"><label class="lbl">ข้อความรอง (ใต้หัวข้อบนแบนเนอร์)</label><input id="pg_u" value="${e(x.sub)}"></div>
+    <div class="full"><label class="lbl">เนื้อหา</label><textarea id="pg_b">${e(x.body)}</textarea></div>
+    <div class="full"><label class="lbl">รูปภาพ</label><div id="pgi"></div><button type="button" class="btn o s" id="pgadd">+ เพิ่มรูป</button><span class="hint">วางลิงก์ (Google Drive / Dropbox / ลิงก์ตรง) หรือกดอัปโหลดไฟล์ · กดรูปบนเว็บเพื่อดูภาพใหญ่ได้</span></div>
+  </div></div></div><div class="savebar"><button class="btn o" id="cc">ยกเลิก</button><button class="btn" id="sv">บันทึก</button></div>`;
+  const draw=()=>{$('pgi').innerHTML=x.images.map((u,i)=>`<div class="crow imgrow" data-i="${i}"><div class="thumb" style="width:56px;height:56px">${u?`<img src="${e(fixUrl(u))}" alt="" referrerpolicy="no-referrer">`:'ไม่มีรูป'}</div><input data-f="u" placeholder="ลิงก์รูป หรือกดอัปโหลด" value="${e(u)}"><label class="btn o s">อัปโหลด<input type="file" accept="image/*" data-up hidden></label><button type="button" class="btn o s" data-rm>ลบ</button></div>`).join('')||'<div class="empty" style="padding:18px">ยังไม่มีรูป กด "+ เพิ่มรูป"</div>';};
+  draw();
+  const ix=el=>Number(el.closest('.crow').dataset.i);
+  $('pgi').oninput=ev=>{if(ev.target.dataset.f)x.images[ix(ev.target)]=ev.target.value;};
+  $('pgi').onchange=async ev=>{
+    if(ev.target.dataset.f){draw();return;}
+    if(ev.target.hasAttribute('data-up')){const f=ev.target.files[0];if(!f)return;const i=ix(ev.target);
+      try{toast('กำลังอัปโหลด...');x.images[i]=await uploadFile(f,'page');draw();toast('อัปโหลดแล้ว');}catch(err){fail('อัปโหลดไม่สำเร็จ',upErr(err));}}};
+  $('pgi').onclick=ev=>{if(ev.target.hasAttribute('data-rm')){x.images.splice(ix(ev.target),1);draw();}};
+  $('pgadd').onclick=()=>{x.images.push('');draw();const r=$('pgi').querySelectorAll('.crow');r[r.length-1].querySelector('input[data-f]').focus();};
+  $('cc').onclick=()=>{S.pg=null;tabPages();};
+  $('sv').onclick=async()=>{
+    const t=$('pg_t').value.trim();if(!t)return toast('กรุณากรอกชื่อเมนู',true);
+    const out={id:x.id,title:t,sub:$('pg_u').value.trim(),body:$('pg_b').value.trim(),show:$('pg_s').value==='true',images:x.images.map(u=>u.trim()).filter(Boolean)};
+    const list=isNew?[...pages,out]:pages.map((p,i)=>i===idx?out:p);
+    $('sv').disabled=true;
+    try{await savePages(list);S.pg=null;toast('บันทึกแล้ว');tabPages();}catch(err){$('sv').disabled=false;fail('บันทึกไม่สำเร็จ',err);}
+  };
+}
+
+/* ---------- ภาพรวมรูปที่เพิ่มไว้ ---------- */
+async function tabImgs(){
+  $('body').innerHTML='<div class="sec"><div class="empty">กำลังโหลด...</div></div>';
+  const names=Object.keys(T);
+  const [s,...ts]=await Promise.all([db.from('cp_settings').select('*'),...names.map(t=>db.from(t).select('*'))]);
+  const bad=[s,...ts].find(x=>x.error);
+  if(bad)return $('body').innerHTML=loadErr(bad.error.message);
+  const c=Object.fromEntries((s.data||[]).map(x=>[x.key,x.value]));
+  const groups=[];
+  const add=(g,go,label,url)=>{url=String(url||'').trim();if(!url)return;let G=groups.find(x=>x.g===g);if(!G)groups.push(G={g,go,items:[]});G.items.push({label,url});};
+  SETTINGS.forEach(([h,,fs],i)=>fs.forEach(([k,l,t])=>{if(['image','bg','pdf'].includes(t))add(h,'set:'+i,l,c[k]);}));
+  const ci=SETTINGS.findIndex(x=>x[2].some(f=>f[2]==='contacts'));
+  try{JSON.parse(c.contacts||'[]').forEach(x=>add('ช่องทางติดต่อ','set:'+ci,'โลโก้ '+(x.label||x.name||''),x.logo||x.icon));}catch(_){}
+  try{JSON.parse(c.custom_pages||'[]').forEach(p=>(p.images||[]).forEach((u,n)=>add('หน้าเว็บเพิ่มเติม','pages',`${p.title||'หน้าใหม่'} · รูปที่ ${n+1}`,u)));}catch(_){}
+  names.forEach((t,i)=>{const cf=T[t];(ts[i].data||[]).forEach(r=>{const n=cf.title_f(r)||'(ไม่มีชื่อ)';add(cf.title,t,n,r[cf.img]);if(r.bg)add(cf.title,t,'พื้นหลัง · '+n,r.bg);});});
+  const total=groups.reduce((a,g)=>a+g.items.length,0);
+  const kind=u=>HEX.test(u)?'สี':u.includes('/storage/v1/')?'อัปโหลดแล้ว':'ลิงก์';
+  const thumb=u=>HEX.test(u)?`<span style="display:block;width:100%;height:100%;background:${u}"></span>`:(/\.pdf($|\?)/i.test(u)?'PDF':`<img src="${e(fixUrl(u))}" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.replaceWith(document.createTextNode('โหลดรูปไม่ได้'))">`);
+  $('body').innerHTML=`<div class="sec"><div class="hd"><h2>รูปที่เพิ่มไว้ทั้งหมด <span class="badge">${total}</span></h2><p>รวมรูปและพื้นหลังทุกจุดของเว็บ กดที่รูปเพื่อไปยังเมนูที่ตั้งค่ารูปนั้น · ถ้าขึ้น "โหลดรูปไม่ได้" แปลว่าลิงก์เสียหรือไม่ได้เปิดสิทธิ์แชร์</p></div></div>`+
+  (groups.map(G=>`<div class="sec"><div class="hd"><h2>${e(G.g)} <span class="badge">${G.items.length}</span></h2></div><div class="bd"><div class="igrid">${G.items.map(it=>`<button class="icard" data-go="${e(G.go)}"><div class="im">${thumb(it.url)}</div><b>${e(it.label)}</b><small>${kind(it.url)}</small></button>`).join('')}</div></div></div>`).join('')||'<div class="sec"><div class="empty">ยังไม่มีรูปที่เพิ่มไว้</div></div>');
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{S.tab=b.dataset.go;S.pg=null;render();window.scrollTo({top:0});});
+}
+
+/* พื้นหลังรายคน เก็บในตั้งค่า (row_bg) ไม่ต้องเพิ่มคอลัมน์ในฐานข้อมูล */
+let ROWBG={};
+async function loadRowBg(){const r=await db.from('cp_settings').select('value').eq('key','row_bg').maybeSingle();try{return JSON.parse(r.data?.value||'{}')||{};}catch(_){return {};}}
+async function saveRowBg(id,val){const m=await loadRowBg();if(val)m[id]=val;else delete m[id];const w=await db.from('cp_settings').upsert([{key:'row_bg',value:JSON.stringify(m),updated_at:new Date().toISOString()}]).select();if(w.error)throw w.error;}
+/* ---------- CRUD ทั่วไป ---------- */
+async function tabList(t){
+  const cf=T[t];
+  const r=await db.from(t).select('*').order(cf.order,{ascending:cf.order!=='published_at',nullsFirst:false});
+  if(r.error) return $('body').innerHTML=`<div class="sec"><div class="hd"><h2>โหลดไม่สำเร็จ</h2><p>${e(r.error.message)} — ตรวจสอบว่ารัน setup.sql แล้ว</p></div></div>`;
+  const rows=r.data;
+  try{ROWBG=await loadRowBg();}catch(_){ROWBG={};}
+  $('body').innerHTML=`<div class="sec"><div class="hd flex"><div><h2>${cf.title} <span class="badge">${rows.length}</span>${rows.filter(x=>!x[cf.img]).length?` <span class="badge warn">ยังไม่มีรูป ${rows.filter(x=>!x[cf.img]).length}</span>`:''}</h2><p>${cf.sub}</p></div><div class="tools"><button class="btn o" id="bulk">+ เพิ่มหลายรายการ</button><button class="btn" id="add">+ เพิ่ม</button></div></div>
+  ${rows.map(x=>`<div class="item"><div class="th">${x[cf.img]?`<img src="${e(fixUrl(x[cf.img]))}" alt="" referrerpolicy="no-referrer">`:'ไม่มีรูป'}</div><div class="tx"><b>${e(cf.title_f(x)||'(ไม่มีชื่อ)')}</b><span class="meta">${e(cf.desc_f(x)||'')}</span></div><div class="acts"><button class="btn o s" data-ed="${x.id}">แก้ไข</button><button class="btn o s" data-cp="${x.id}">คัดลอก</button><button class="btn o s" data-rm="${x.id}">ลบ</button></div></div>`).join('')||'<div class="empty">ยังไม่มีรายการ กด "+ เพิ่ม"</div>'}</div>`;
+  $('add').onclick=()=>editRow(t,null,rows);
+  $('bulk').onclick=()=>bulkAdd(t,rows);
+  document.querySelectorAll('[data-cp]').forEach(b=>b.onclick=async()=>{
+    const x=rows.find(y=>y.id===b.dataset.cp);if(!x)return;
+    const v={};cf.f.forEach(([k,l,ty])=>{if(x[k]!==undefined&&x[k]!==null)v[k]=x[k];});
+    const k0=cf.f[0][0];v[k0]=(v[k0]||'')+' (สำเนา)';
+    if('sort' in v)v.sort=Math.max(0,...rows.map(y=>Number(y.sort)||0))+1;
+    b.disabled=true;
+    let w=await db.from(t).insert(v).select();
+    if(w.error&&'bg' in v&&/bg|column|schema/i.test(w.error.message)){delete v.bg;w=await db.from(t).insert(v).select();}
+    (w.error||!w.data?.length)?(b.disabled=false,fail('คัดลอกไม่สำเร็จ',w.error||{message:'ไม่มีสิทธิ์'})):(toast('คัดลอกแล้ว กด "แก้ไข" เพื่อเปลี่ยนชื่อ/รูป'),tabList(t));
+  });
+  document.querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>editRow(t,rows.find(x=>x.id===b.dataset.ed),rows));
+  document.querySelectorAll('[data-rm]').forEach(b=>b.onclick=async()=>{
+    const x=rows.find(y=>y.id===b.dataset.rm);
+    if(!await confirmBox(`ลบ "${cf.title_f(x)||'รายการนี้'}"?`,'ลบแล้วกู้คืนไม่ได้'))return;
+    const d=await db.from(t).delete().eq('id',x.id).select();
+    (d.error||!d.data?.length)?fail('ลบไม่สำเร็จ',d.error||{message:'ไม่มีสิทธิ์'}):(toast('ลบแล้ว'),tabList(t));
+  });
+}
+/* เพิ่มหลายรายการทีเดียว: หนึ่งบรรทัด = หนึ่งรายการ คั่นช่องด้วย | หรือแท็บ (วางจาก Excel/Google Sheets ได้) แล้วค่อยใส่รูปทีหลัง */
+function bulkAdd(t,rows){
+  const cf=T[t],cols=cf.bulk,lab=k=>(cf.f.find(f=>f[0]===k)||[k,k])[1];
+  const today=new Date().toISOString().slice(0,10);
+  $('body').innerHTML=`<div class="sec"><div class="hd"><h2>เพิ่มหลายรายการ · ${cf.title}</h2><p>พิมพ์ 1 บรรทัดต่อ 1 รายการ แล้วค่อยเข้าไปใส่รูปทีหลัง</p></div><div class="bd"><div class="g">
+    <div class="full"><label class="lbl">รูปแบบแต่ละบรรทัด</label><div class="note"><code>${cols.map(k=>e(lab(k))).join(' | ')}</code><br>ใส่แค่ช่องแรกก็ได้ ช่องที่เหลือเว้นว่างได้ · ใช้เครื่องหมาย <code>|</code> หรือวางจากตาราง Excel / Google Sheets ได้เลย</div></div>
+    <div class="full"><label class="lbl">รายการ</label><textarea id="bk" style="min-height:240px" placeholder="${e(cols.map(k=>lab(k)).join(' | '))}"></textarea><span class="hint" id="bkn">0 รายการ</span></div>
+  </div></div></div><div class="savebar"><button class="btn o" id="cc">ยกเลิก</button><button class="btn" id="sv">เพิ่มทั้งหมด</button></div>`;
+  const parse=()=>$('bk').value.split(/\r?\n/).map(l=>l.split(/\t|\|/).map(x=>x.trim())).filter(a=>a[0]);
+  $('bk').oninput=()=>{$('bkn').textContent=parse().length+' รายการ';};
+  $('cc').onclick=()=>tabList(t);
+  $('sv').onclick=async()=>{
+    const lines=parse();if(!lines.length)return toast('กรุณาพิมพ์อย่างน้อย 1 รายการ',true);
+    let n=Math.max(0,...rows.map(x=>Number(x.sort)||0));
+    const out=lines.map(a=>{const v={};
+      cf.f.forEach(([k,l,ty,o])=>{
+        if(ty==='bg')return;
+        if(ty==='image')v[k]='';
+        else if(ty==='number')v[k]=++n;
+        else if(ty==='date')v[k]=today;
+        else if(ty==='select')v[k]=o[0][0];
+        else v[k]='';});
+      cols.forEach((k,i)=>{if(a[i])v[k]=a[i];});
+      return v;});
+    $('sv').disabled=true;
+    const w=await db.from(t).insert(out).select();
+    $('sv').disabled=false;
+    (w.error||!w.data?.length)?fail('เพิ่มไม่สำเร็จ',w.error||{message:'ไม่มีสิทธิ์'}):(toast(`เพิ่มแล้ว ${w.data.length} รายการ`),tabList(t));
+  };
+  $('bk').focus();
+}
+function editRow(t,row,rows){
+  const cf=T[t],st={...(row||{})};if(row&&!st.bg&&ROWBG[row.id])st.bg=ROWBG[row.id];
+  const nextSort=Math.max(0,...rows.map(x=>Number(x.sort)||0))+1;
+  const today=new Date().toISOString().slice(0,10);
+  const fld=([k,l,ty,o])=>{
+    if(ty==='bg'){st[k]=st[k]||'';return bgHtml('e_'+k,l,'full')+((t==='cp_members'||t==='cp_leaders')?'<div class="full note">พื้นหลังของคนนี้เก็บให้อัตโนมัติ ไม่ต้องรัน SQL · ไม่ใส่ = ใช้พื้นหลังกลางในเมนู "ตั้งค่าเว็บ"</div>':'');}
+    if(ty==='image'){st[k]=st[k]||'';return upHtml('e_'+k,l);}
+    if(ty==='textarea') return `<div class="full"><label class="lbl">${l}</label><textarea id="e_${k}">${e(st[k]||'')}</textarea></div>`;
+    if(ty==='select') return `<div><label class="lbl">${l}</label><select id="e_${k}">${o.map(x=>`<option value="${x[0]}" ${(st[k]||o[0][0])===x[0]?'selected':''}>${x[1]}</option>`).join('')}</select></div>`;
+    if(ty==='number') return `<div><label class="lbl">${l}</label><input id="e_${k}" type="number" value="${e(st[k]??nextSort)}"><span class="hint">เลขน้อยแสดงก่อน</span></div>`;
+    if(ty==='date') return `<div><label class="lbl">${l}</label><input id="e_${k}" type="date" value="${e(st[k]||today)}"></div>`;
+    return `<div><label class="lbl">${l}</label><input id="e_${k}" value="${e(st[k]||'')}"></div>`;
+  };
+  $('body').innerHTML=`<div class="sec"><div class="hd"><h2>${row?'แก้ไข':'เพิ่ม'} · ${cf.title}</h2></div><div class="bd"><div class="g">${cf.f.map(fld).join('')}</div></div></div>
+  <div class="savebar"><button class="btn o" id="cc">ยกเลิก</button><button class="btn" id="sv">บันทึก</button></div>`;
+  cf.f.filter(f=>f[2]==='image').forEach(f=>bindUp('e_'+f[0],st,f[0]));
+  cf.f.filter(f=>f[2]==='bg').forEach(f=>bindBg('e_'+f[0],st,f[0]));
+  $('cc').onclick=()=>tabList(t);
+  $('sv').onclick=async()=>{
+    const v={};
+    cf.f.forEach(([k,l,ty])=>{
+      if(ty==='image'||ty==='bg') v[k]=st[k]||'';
+      else if(ty==='number') v[k]=Number($('e_'+k).value)||0;
+      else v[k]=$('e_'+k).value.trim();
+    });
+    if(!v[cf.f[0][0]]) return toast('กรุณากรอก'+cf.f[0][1],true);
+    $('sv').disabled=true;
+    const run=vv=>row?db.from(t).update(vv).eq('id',row.id).select():db.from(t).insert(vv).select();
+    let w=await run(v),noBg=false;
+    if(w.error&&'bg' in v&&/bg|column|schema/i.test(w.error.message)){const v2={...v};delete v2.bg;w=await run(v2);noBg=!!v.bg&&!w.error;}
+    $('sv').disabled=false;
+    if('bg' in v&&w.data?.length){try{await saveRowBg(w.data[0].id,v.bg);}catch(err){return fail('บันทึกพื้นหลังไม่สำเร็จ',err);}}
+    (w.error||!w.data?.length)?fail('บันทึกไม่สำเร็จ',w.error||{message:'ไม่มีสิทธิ์'}):(toast('บันทึกแล้ว'),tabList(t));
+  };
+}
+
+/* =====================================================================
+   ส่วนที่เพิ่มใหม่: เบอร์พรรค · รูปหัวหน้า (รายหน้า) · ขอบฟุ้งใต้แบนเนอร์ (รายหน้า) · สร้างโปสเตอร์
+   ===================================================================== */
+const POSTER='สร้างโปสเตอร์';
+const MODES=[['global','ใช้รูปทั้งเว็บ'],['own','ใช้รูปเฉพาะหน้านี้'],['none','ไม่ใช้รูป']];
+const PG_STATIC=[['home','หน้าหลัก'],['about','เกี่ยวกับพรรค'],['history','ประวัติแกนนำ'],['members','สมาชิกพรรค'],['policies','นโยบายพรรค'],['news','ข่าวกิจกรรม']];
+const perPage=(pre,glob,label,pages)=>[[glob,label+' (ใช้ทั้งเว็บ)','image','',1],
+  ...pages.flatMap(([p,n])=>[[pre+'_mode_'+p,n+': เลือกรูป','select',MODES],[pre+'_img_'+p,n+': รูปเฉพาะหน้านี้ (ใช้เมื่อเลือก "ใช้รูปเฉพาะหน้านี้")','image']])];
+const FZ_MODES=[['global','ใช้ค่าทั้งเว็บ'],['on','มีขอบฟุ้ง (แบบหน้าแรก)'],['none','ไม่มีขอบฟุ้ง']];
+const fzFields=pages=>[['fz_on','ขอบฟุ้งใต้แบนเนอร์ (ค่าทั้งเว็บ)','select',[['true','เปิด'],['false','ปิด']]],...pages.map(([p,n])=>['fz_mode_'+p,'หน้า: '+n,'select',FZ_MODES])];
+const SEC_LP='รูปหัวหน้า',SEC_BUMP='ขอบฟุ้งใต้แบนเนอร์';
+const buildSecs=pages=>[
+ ['เบอร์พรรค','ใส่หมายเลขพรรค แล้วเลือกแสดงหรือซ่อนบนเว็บ',[
+   ['party_no_on','แสดงเบอร์พรรคบนเว็บ','select',[['true','เปิด (แสดง)'],['false','ปิด (ซ่อน)']]],['party_no','หมายเลขพรรค','text']]],
+ [SEC_LP,'ตั้งรูปหัวหน้า 1 รูปใช้ทั้งเว็บ แล้วเลือกรายหน้าได้ว่าใช้รูปทั้งเว็บ รูปเฉพาะหน้า หรือไม่ใช้รูป · อัปโหลดหรือวางลิงก์ก็ได้',perPage('lp','leader_photo','รูปหัวหน้า',pages)],
+ [SEC_BUMP,'ขอบฟุ้งไล่สีขาวที่ล่างแบนเนอร์ แบบเดียวกับหน้าแรก (ไม่ต้องใส่รูป) · เปิด/ปิดทั้งเว็บ แล้วเลือกรายหน้าได้ว่าจะใช้ค่าทั้งเว็บ มีขอบฟุ้ง หรือไม่มี',fzFields(pages)]];
+SETTINGS.splice(1,0,...buildSecs(PG_STATIC));
+async function refreshPg(){
+  const pages=[...PG_STATIC];
+  (await loadPages()).forEach(p=>pages.push([p.id,p.title||'หน้าใหม่']));
+  const nb=buildSecs(pages);
+  [SEC_LP,SEC_BUMP].forEach((n,i)=>{const s=SETTINGS.find(x=>x[0]===n);if(s)s[2]=nb[i+1][2];});
+}
+const _tabSettings=tabSettings;
+tabSettings=async function(idx=0){
+  try{await refreshPg();}catch(_){}
+  return _tabSettings(idx);
+};
+
+async function tabPoster(){
+  $('body').innerHTML='<div class="sec"><div class="empty">กำลังโหลด...</div></div>';
+  const names=['cp_policies','cp_members','cp_leaders','cp_news','cp_why'];
+  const [s,...ts]=await Promise.all([db.from('cp_settings').select('*'),...names.map(t=>db.from(t).select('*'))]);
+  const bad=[s,...ts].find(x=>x.error);if(bad)return $('body').innerHTML=loadErr(bad.error.message);
+  const c=Object.fromEntries((s.data||[]).map(x=>[x.key,x.value]));
+  const D={};names.forEach((t,i)=>D[t]=ts[i].data||[]);
+  const SRC={cp_policies:{l:'นโยบายพรรค',h:r=>r.title,d:r=>r.description,i:r=>r.image_url},
+    cp_members:{l:'สมาชิกพรรค',h:r=>r.nickname,d:r=>[r.role,r.class_name,r.full_name].filter(Boolean).join(' · '),i:r=>r.image_url},
+    cp_leaders:{l:'ประวัติแกนนำ',h:r=>r.full_name,d:r=>[r.position,r.experience].filter(Boolean).join('\n'),i:r=>r.image_url},
+    cp_news:{l:'ข่าวกิจกรรม',h:r=>r.title,d:r=>r.body,i:r=>r.image_url},
+    cp_why:{l:'ทำไมต้องเลือก',h:r=>r.title,d:r=>r.description,i:r=>r.image_url},
+    free:{l:'พิมพ์เอง'}};
+  const P={src:'cp_policies',head:'',body:'',img:'',bg:c.poster_bg||'',fade:c.poster_fade||'72',party:c.party_no_on==='false'?'0':'1',leader:'0',logo:'1',contactName:c.poster_contact_name||'',contactPhone:c.poster_contact_phone||'',contactLine:c.poster_contact_line||'',contactEmail:c.poster_contact_email||'',contactWeb:c.poster_contact_web||''};
+  const yn=(id,l,v)=>`<div><label class="lbl">${l}</label><select id="${id}"><option value="1" ${v==='1'?'selected':''}>แสดง</option><option value="0" ${v==='0'?'selected':''}>ซ่อน</option></select></div>`;
+  $('body').innerHTML=`<div class="sec"><div class="hd"><h2>สร้างโปสเตอร์</h2><p>ดึงข้อมูลจากเว็บมาทำโปสเตอร์ 1080×1350 ใช้สี โลโก้ เบอร์พรรค และรูปหัวหน้าจากที่ตั้งค่าไว้ · แก้ข้อความได้ก่อนดาวน์โหลด</p></div><div class="bd"><div class="g">
+   <div><label class="lbl">ดึงข้อมูลจาก</label><select id="ps">${Object.entries(SRC).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}</select></div>
+   <div><label class="lbl">เลือกรายการ</label><select id="pi"></select></div>
+   <div class="full"><label class="lbl">หัวข้อ</label><input id="ph"></div>
+   <div class="full"><label class="lbl">รายละเอียด</label><textarea id="pb" style="min-height:100px"></textarea></div>
+   ${yn('pn','เบอร์พรรค',P.party)}${yn('pl','รูปหัวหน้า','0')}${yn('pg','โลโก้ + ชื่อพรรค','1')}
+   ${upHtml('pbg','รูปพื้นหลังโปสเตอร์ (เต็มภาพ)','image/*','full')}
+   <div class="full"><label class="lbl">ความเข้มของชั้นเฟดทับพื้นหลัง</label><input id="pfade" type="range" min="0" max="95" value="${e(P.fade)}" style="padding:0"><span class="hint">ปรับความเข้มของชั้นไล่สีเพื่อให้ข้อความอ่านง่าย</span></div>
+   ${upHtml('pm','รูปหลักบนโปสเตอร์ (ดึงจากรายการอัตโนมัติ แก้ได้ · แนะนำ PNG โปร่งใส)','image/*','full')}
+   <div class="full"><h3 style="margin:0 0 8px">ข้อมูลติดต่อบนโปสเตอร์</h3><div class="g"><div><label class="lbl">ชื่อ/ช่องทางติดต่อ</label><input id="pcname" placeholder="เช่น ติดต่อพรรคคอนนิวเตอร์" value="${e(P.contactName)}"></div><div><label class="lbl">เบอร์โทรศัพท์</label><input id="pcphone" placeholder="เบอร์โทร" value="${e(P.contactPhone)}"></div><div><label class="lbl">LINE / Facebook</label><input id="pcline" placeholder="LINE ID หรือ Facebook" value="${e(P.contactLine)}"></div><div><label class="lbl">อีเมล</label><input id="pcemail" placeholder="อีเมล" value="${e(P.contactEmail)}"></div><div class="full"><label class="lbl">เว็บไซต์ / ลิงก์อื่น</label><input id="pcweb" placeholder="เว็บไซต์หรือ URL" value="${e(P.contactWeb)}"></div></div><button class="btn o" id="psave" type="button" style="margin-top:14px">บันทึกพื้นหลังและข้อมูลติดต่อ</button><span class="hint">บันทึกไว้ใน cp_settings เพื่อเรียกใช้ครั้งถัดไป</span></div>
+   <div class="full"><canvas id="pc" style="width:100%;max-width:460px;border-radius:14px;border:1px solid var(--line);background:#fff"></canvas></div>
+   <div class="full" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="pdl">ดาวน์โหลด PNG</button><button class="btn o" id="pup">อัปโหลดเก็บไว้ + คัดลอกลิงก์</button></div>
+   <div class="full note">อัตโนมัติ: เลือก "ดึงข้อมูลจาก" ด้านบน แล้วกดปุ่มนี้ ระบบจะสร้างโปสเตอร์ให้ทุกรายการในหมวดนั้นพร้อมกัน (ใช้ตัวเลือกเบอร์พรรค รูปหัวหน้า โลโก้ ที่ตั้งไว้)</div>
+   <div class="full" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="pall">สร้างทุกรายการของหมวดนี้อัตโนมัติ</button><button class="btn o hide" id="pdall">ดาวน์โหลดทั้งหมด</button></div>
+   <div class="full igrid" id="pgal"></div>
+  </div></div></div>`;
+  const loadImg=u=>new Promise(r=>{if(!u)return r(null);const i=new Image();i.crossOrigin='anonymous';i.onload=()=>r(i);i.onerror=()=>r(null);i.src=fixUrl(u);});
+  const rr=(g,x,y,w,h,r)=>{g.beginPath();g.roundRect?g.roundRect(x,y,w,h,r):g.rect(x,y,w,h);};
+  const wrap=(g,t,w,max)=>{const seg=window.Intl&&Intl.Segmenter?[...new Intl.Segmenter('th',{granularity:'word'}).segment(t||'')].map(x=>x.segment):[...(t||'')];const L=[];let ln='';
+    for(const q of seg){if(q==='\n'){L.push(ln.trim());ln='';}else if(g.measureText(ln+q).width>w&&ln){L.push(ln.trim());ln=q.trimStart();}else ln+=q;if(L.length>=max)break;}
+    if(ln&&L.length<max)L.push(ln.trim());return L;};
+  let tok=0,tm;const go=()=>{clearTimeout(tm);tm=setTimeout(draw,120);};
+  async function render(cv,P,ok){
+    await document.fonts.load('700 40px Anuphan');await document.fonts.load('400 30px Anuphan');
+    const [lg,im,ld,bg]=await Promise.all([loadImg(c.site_logo),loadImg(P.img),P.leader==='1'?loadImg(c.leader_photo):null,loadImg(P.bg)]);
+    if(ok&&!ok())return;
+    const g=cv.getContext('2d'),W=1080,H=1350;cv.width=W;cv.height=H;
+    const col=k=>HEX.test(c[k]||'')?c[k]:DEF[k],nv=col('theme_navy'),bl=col('theme_blue'),sk=col('theme_sky');
+    const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,nv);gr.addColorStop(.55,bl);gr.addColorStop(1,sk);g.fillStyle=gr;g.fillRect(0,0,W,H);
+    if(bg){const k=Math.max(W/bg.width,H/bg.height),bw=bg.width*k,bh=bg.height*k;g.drawImage(bg,(W-bw)/2,(H-bh)/2,bw,bh);}
+    const fade=Math.max(0,Math.min(95,Number(P.fade)||0))/100;const fg=g.createLinearGradient(0,0,0,H);fg.addColorStop(0,`rgba(18,49,143,${Math.min(.94,fade+.12)})`);fg.addColorStop(.52,`rgba(29,79,216,${fade})`);fg.addColorStop(1,`rgba(77,179,245,${Math.max(.08,fade*.55)})`);g.fillStyle=fg;g.fillRect(0,0,W,H);
+    if(P.logo==='1'){let x=60;if(lg){const k=90/lg.height;g.drawImage(lg,60,50,lg.width*k,90);x=80+lg.width*k;}g.fillStyle='#fff';g.font='700 40px Anuphan';g.fillText(c.site_name||NAME_TH,x,108);}
+    if(P.party==='1'&&c.party_no){g.fillStyle='#fff';g.beginPath();g.arc(W-130,100,70,0,7);g.fill();g.fillStyle=nv;g.textAlign='center';g.font='600 24px Anuphan';g.fillText('เบอร์',W-130,76);g.font='700 56px Anuphan';g.fillText(c.party_no,W-130,126);g.textAlign='left';}
+    let y=190;
+    if(im){g.save();const k=Math.min(960/im.width,520/im.height),w=im.width*k,h=im.height*k;g.drawImage(im,60+(960-w)/2,y+(520-h)/2,w,h);g.restore();y+=540;}else y+=20;
+    const tw=ld?620:960;
+    g.fillStyle='#fff';g.font='700 66px Anuphan';wrap(g,P.head,tw,3).forEach(l=>{g.fillText(l,60,y+50);y+=84;});
+    y+=10;g.font='400 36px Anuphan';g.fillStyle='rgba(255,255,255,.93)';wrap(g,P.body,tw,im?5:9).forEach(l=>{g.fillText(l,60,y+36);y+=56;});
+    if(ld){const h=Math.min(480,ld.height*(380/ld.width)),w=ld.width*(h/ld.height);g.drawImage(ld,W-50-w,H-100-h,w,h);}
+    g.fillStyle=nv;g.fillRect(0,H-100,W,100);g.fillStyle='#fff';g.font='500 30px Anuphan';g.fillText(c.site_en||c.site_name||'',60,H-38);
+    const contacts=[P.contactName,P.contactPhone?'โทร '+P.contactPhone:'',P.contactLine,P.contactEmail,P.contactWeb].filter(Boolean);if(contacts.length){g.textAlign='left';g.font='400 22px Anuphan';g.fillStyle='rgba(255,255,255,.96)';let cy=H-132;contacts.slice(0,4).forEach((v,i)=>{g.fillText(v,60,cy+i*26,960);});}else if(c.phone_on!=='false'&&c.phone_number){g.textAlign='right';g.fillText('โทร '+c.phone_number,W-60,H-38);g.textAlign='left';}
+  }
+  async function draw(){const my=++tok;await render($('pc'),P,()=>my===tok);}
+  const paint=bindUp('pm',P,'img',false,go);
+  bindUp('pbg',P,'bg',false,go);
+  $('pfade').oninput=ev=>{P.fade=ev.target.value;go();};
+  [['pcname','contactName'],['pcphone','contactPhone'],['pcline','contactLine'],['pcemail','contactEmail'],['pcweb','contactWeb']].forEach(([id,key])=>$(id).oninput=ev=>{P[key]=ev.target.value;go();});
+  $('psave').onclick=async()=>{try{const vals={poster_bg:P.bg,poster_fade:String(P.fade),poster_contact_name:P.contactName,poster_contact_phone:P.contactPhone,poster_contact_line:P.contactLine,poster_contact_email:P.contactEmail,poster_contact_web:P.contactWeb};const rows=Object.entries(vals).map(([key,value])=>({key,value:String(value||'')}));const res=await db.from('cp_settings').upsert(rows,{onConflict:'key'});if(res.error)throw res.error;toast('บันทึกพื้นหลังและข้อมูลติดต่อแล้ว');}catch(err){fail('บันทึกไม่สำเร็จ',err);}};
+  const fill=()=>{const s=SRC[P.src];$('pi').innerHTML='<option value="">— พิมพ์เอง —</option>'+(s.h?D[P.src].map((r,i)=>`<option value="${i}">${e(s.h(r)||'(ไม่มีชื่อ)')}</option>`).join(''):'');};
+  $('pi').onchange=()=>{const r=(D[P.src]||[])[$('pi').value];if(r){const s=SRC[P.src];P.head=s.h(r)||'';P.body=s.d(r)||'';P.img=s.i(r)||'';$('ph').value=P.head;$('pb').value=P.body;}paint();go();};
+  $('ps').onchange=ev=>{P.src=ev.target.value;fill();$('pi').value=(D[P.src]||[]).length?'0':'';$('pi').onchange();};
+  $('ph').oninput=ev=>{P.head=ev.target.value;go();};$('pb').oninput=ev=>{P.body=ev.target.value;go();};
+  $('pn').onchange=ev=>{P.party=ev.target.value;go();};$('pl').onchange=ev=>{P.leader=ev.target.value;go();};$('pg').onchange=ev=>{P.logo=ev.target.value;go();};
+  $('pdl').onclick=()=>{try{$('pc').toBlob(b=>{if(!b)return toast('สร้างไฟล์ไม่สำเร็จ',true);const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='poster.png';a.click();});}catch(err){fail('ดาวน์โหลดไม่ได้ (รูปจากลิงก์ภายนอกอาจถูกจำกัด ลองอัปโหลดรูปแทน)',err);}};
+  $('pup').onclick=()=>{try{$('pc').toBlob(async b=>{try{const u=await uploadFile(new File([b],'p.png',{type:'image/png'}),'poster');try{await navigator.clipboard.writeText(u);}catch(_){}toast('อัปโหลดแล้ว คัดลอกลิงก์แล้ว');}catch(err){fail('อัปโหลดไม่สำเร็จ',upErr(err));}});}catch(err){fail('สร้างรูปไม่ได้ (รูปจากลิงก์ภายนอกอาจถูกจำกัด)',err);}};
+  $('pall').onclick=async()=>{
+    const rows=D[P.src]||[];if(!rows.length)return toast('หมวดนี้ยังไม่มีรายการ',true);
+    const s=SRC[P.src];$('pgal').innerHTML='';$('pall').disabled=true;const files=[];
+    for(const r of rows){
+      const Q={...P,head:s.h(r)||'',body:s.d(r)||'',img:s.i(r)||''};
+      const cv=document.createElement('canvas');await render(cv,Q);
+      let url='';try{url=cv.toDataURL('image/png');}catch(_){}
+      const name=(Q.head||'poster').replace(/[^\wก-๙]+/g,'_').slice(0,40)+'.png';files.push({name,url});
+      const d=document.createElement('div');d.className='icard';d.innerHTML='<div class="im"></div><b>'+e(Q.head)+'</b>';
+      cv.style.cssText='width:100%;height:100%;object-fit:contain';d.querySelector('.im').appendChild(cv);
+      if(url){const l=document.createElement('a');l.className='btn o s';l.textContent='ดาวน์โหลด';l.href=url;l.download=name;d.appendChild(l);}
+      else d.insertAdjacentHTML('beforeend','<small>ดาวน์โหลดไม่ได้ (รูปจากลิงก์ภายนอก)</small>');
+      $('pgal').appendChild(d);
+    }
+    $('pall').disabled=false;$('pdall').classList.toggle('hide',!files.some(f=>f.url));
+    $('pdall').onclick=()=>files.filter(f=>f.url).forEach((f,i)=>setTimeout(()=>{const l=document.createElement('a');l.href=f.url;l.download=f.name;l.click();},i*350));
+  };
+  fill();$('pi').value=D.cp_policies.length?'0':'';$('pi').onchange();
+}
+
+/* ---------- boot ---------- */
+(async()=>{
+  const {data}=await db.auth.getSession();
+  if(data.session) await checkAdmin();
+  S.admin?render():renderLogin();
+  const s=await db.from('cp_settings').select('value').eq('key','site_name').maybeSingle();
+  if(s.data?.value&&!OLD_NAMES.includes(s.data.value)) $('siteName').textContent=s.data.value;
+})();
+db.auth.onAuthStateChange((ev,ses)=>{if(!ses&&S.admin){S.admin=false;$('outBtn').classList.add('hide');renderLogin();}});
+</script>
+</body>
+</html>
