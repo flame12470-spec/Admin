@@ -515,7 +515,7 @@ async function tabImgs(){
   const thumb=u=>HEX.test(u)?`<span style="display:block;width:100%;height:100%;background:${u}"></span>`:(/\.pdf($|\?)/i.test(u)?'PDF':`<img src="${e(fixUrl(u))}" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.replaceWith(document.createTextNode('โหลดรูปไม่ได้'))">`);
   $('body').innerHTML=`<div class="sec"><div class="hd"><h2>รูปที่เพิ่มไว้ทั้งหมด <span class="badge">${total}</span></h2><p>รวมรูปและพื้นหลังทุกจุดของเว็บ กดที่รูปเพื่อไปยังเมนูที่ตั้งค่ารูปนั้น · ถ้าขึ้น "โหลดรูปไม่ได้" แปลว่าลิงก์เสียหรือไม่ได้เปิดสิทธิ์แชร์</p></div></div>`+
   (groups.map(G=>`<div class="sec"><div class="hd"><h2>${e(G.g)} <span class="badge">${G.items.length}</span></h2></div><div class="bd"><div class="igrid">${G.items.map(it=>`<button class="icard" data-go="${e(G.go)}"><div class="im">${thumb(it.url)}</div><b>${e(it.label)}</b><small>${kind(it.url)}</small></button>`).join('')}</div></div></div>`).join('')||'<div class="sec"><div class="empty">ยังไม่มีรูปที่เพิ่มไว้</div></div>');
-  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{S.tab=b.dataset.go;S.pg=null;render();window.scrollTo({top:0});});
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const y=window.scrollY||0;const sideY=document.querySelector('.side')?.scrollTop||0;S.tab=b.dataset.go;S.pg=null;render();requestAnimationFrame(()=>{window.scrollTo(0,y);const side=document.querySelector('.side');if(side)side.scrollTop=sideY;});});
 }
 
 /* พื้นหลังรายคน เก็บในตั้งค่า (row_bg) ไม่ต้องเพิ่มคอลัมน์ในฐานข้อมูล */
@@ -660,18 +660,19 @@ async function tabPoster(){
     cp_news:{l:'ข่าวกิจกรรม',h:r=>r.title,d:r=>r.body,i:r=>r.image_url},
     cp_why:{l:'ทำไมต้องเลือก',h:r=>r.title,d:r=>r.description,i:r=>r.image_url},
     free:{l:'พิมพ์เอง'}};
-  const P={src:'cp_policies',head:'',body:'',img:'',bg:c.poster_bg||'',fade:c.poster_fade||'72',party:c.party_no_on==='false'?'0':'1',leader:'0',logo:'1',contactName:c.poster_contact_name||'',contactPhone:c.poster_contact_phone||'',contactLine:c.poster_contact_line||'',contactEmail:c.poster_contact_email||'',contactWeb:c.poster_contact_web||''};
+  const P={src:'cp_policies',head:'',body:'',img:'',bg:c.poster_bg||'',fade:c.poster_fade||'72',type:'standard',party:c.party_no_on==='false'?'0':'1',leader:'0',logo:'1'};
   const yn=(id,l,v)=>`<div><label class="lbl">${l}</label><select id="${id}"><option value="1" ${v==='1'?'selected':''}>แสดง</option><option value="0" ${v==='0'?'selected':''}>ซ่อน</option></select></div>`;
   $('body').innerHTML=`<div class="sec"><div class="hd"><h2>สร้างโปสเตอร์</h2><p>ดึงข้อมูลจากเว็บมาทำโปสเตอร์ 1080×1350 ใช้สี โลโก้ เบอร์พรรค และรูปหัวหน้าจากที่ตั้งค่าไว้ · แก้ข้อความได้ก่อนดาวน์โหลด</p></div><div class="bd"><div class="g">
+   <div class="full"><label class="lbl">ประเภทโปสเตอร์</label><select id="ptype"><option value="standard">รูปปก / เอกสารทั่วไป — ไม่ใส่เฟดทับภาพพื้นหลัง</option><option value="person">รูปบุคคล — ใส่เฟดให้ภาพกลมกลืน</option></select><span class="hint">เลือกรูปแบบก่อนจัดวาง ระบบจะเปลี่ยนเลย์เอาต์และเอฟเฟกต์ให้อัตโนมัติ</span></div>
    <div><label class="lbl">ดึงข้อมูลจาก</label><select id="ps">${Object.entries(SRC).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}</select></div>
    <div><label class="lbl">เลือกรายการ</label><select id="pi"></select></div>
    <div class="full"><label class="lbl">หัวข้อ</label><input id="ph"></div>
    <div class="full"><label class="lbl">รายละเอียด</label><textarea id="pb" style="min-height:100px"></textarea></div>
    ${yn('pn','เบอร์พรรค',P.party)}${yn('pl','รูปหัวหน้า','0')}${yn('pg','โลโก้ + ชื่อพรรค','1')}
    ${upHtml('pbg','รูปพื้นหลังโปสเตอร์ (เต็มภาพ)','image/*','full')}
-   <div class="full"><label class="lbl">ความเข้มของชั้นเฟดทับพื้นหลัง</label><input id="pfade" type="range" min="0" max="95" value="${e(P.fade)}" style="padding:0"><span class="hint">ปรับความเข้มของชั้นไล่สีเพื่อให้ข้อความอ่านง่าย</span></div>
+   <div class="full hide" id="fadeControl"><label class="lbl">ความเข้มเฟดสำหรับโปสเตอร์บุคคล</label><input id="pfade" type="range" min="0" max="95" value="${e(P.fade)}" style="padding:0"><span class="hint">ใช้เฉพาะโหมดรูปบุคคลเท่านั้น โหมดเอกสารทั่วไปจะไม่ใส่เฟดทับพื้นหลัง</span></div>
    ${upHtml('pm','รูปหลักบนโปสเตอร์ (ดึงจากรายการอัตโนมัติ แก้ได้ · แนะนำ PNG โปร่งใส)','image/*','full')}
-   <div class="full"><h3 style="margin:0 0 8px">ข้อมูลติดต่อบนโปสเตอร์</h3><div class="g"><div><label class="lbl">ชื่อ/ช่องทางติดต่อ</label><input id="pcname" placeholder="เช่น ติดต่อพรรคคอนนิวเตอร์" value="${e(P.contactName)}"></div><div><label class="lbl">เบอร์โทรศัพท์</label><input id="pcphone" placeholder="เบอร์โทร" value="${e(P.contactPhone)}"></div><div><label class="lbl">LINE / Facebook</label><input id="pcline" placeholder="LINE ID หรือ Facebook" value="${e(P.contactLine)}"></div><div><label class="lbl">อีเมล</label><input id="pcemail" placeholder="อีเมล" value="${e(P.contactEmail)}"></div><div class="full"><label class="lbl">เว็บไซต์ / ลิงก์อื่น</label><input id="pcweb" placeholder="เว็บไซต์หรือ URL" value="${e(P.contactWeb)}"></div></div><button class="btn o" id="psave" type="button" style="margin-top:14px">บันทึกพื้นหลังและข้อมูลติดต่อ</button><span class="hint">บันทึกไว้ใน cp_settings เพื่อเรียกใช้ครั้งถัดไป</span></div>
+   <div class="full"><button class="btn o" id="psave" type="button">บันทึกค่าพื้นหลังและเอฟเฟกต์</button><span class="hint">บันทึกค่าพื้นหลังและความเข้มเฟดไว้ใน cp_settings · ไม่มีข้อมูลติดต่อบนโปสเตอร์</span></div>
    <div class="full"><canvas id="pc" style="width:100%;max-width:460px;border-radius:14px;border:1px solid var(--line);background:#fff"></canvas></div>
    <div class="full" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="pdl">ดาวน์โหลด PNG</button><button class="btn o" id="pup">อัปโหลดเก็บไว้ + คัดลอกลิงก์</button></div>
    <div class="full note">อัตโนมัติ: เลือก "ดึงข้อมูลจาก" ด้านบน แล้วกดปุ่มนี้ ระบบจะสร้างโปสเตอร์ให้ทุกรายการในหมวดนั้นพร้อมกัน (ใช้ตัวเลือกเบอร์พรรค รูปหัวหน้า โลโก้ ที่ตั้งไว้)</div>
@@ -692,24 +693,30 @@ async function tabPoster(){
     const col=k=>HEX.test(c[k]||'')?c[k]:DEF[k],nv=col('theme_navy'),bl=col('theme_blue'),sk=col('theme_sky');
     const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,nv);gr.addColorStop(.55,bl);gr.addColorStop(1,sk);g.fillStyle=gr;g.fillRect(0,0,W,H);
     if(bg){const k=Math.max(W/bg.width,H/bg.height),bw=bg.width*k,bh=bg.height*k;g.drawImage(bg,(W-bw)/2,(H-bh)/2,bw,bh);}
-    const fade=Math.max(0,Math.min(95,Number(P.fade)||0))/100;const fg=g.createLinearGradient(0,0,0,H);fg.addColorStop(0,`rgba(18,49,143,${Math.min(.94,fade+.12)})`);fg.addColorStop(.52,`rgba(29,79,216,${fade})`);fg.addColorStop(1,`rgba(77,179,245,${Math.max(.08,fade*.55)})`);g.fillStyle=fg;g.fillRect(0,0,W,H);
-    if(P.logo==='1'){let x=60;if(lg){const k=90/lg.height;g.drawImage(lg,60,50,lg.width*k,90);x=80+lg.width*k;}g.fillStyle='#fff';g.font='700 40px Anuphan';g.fillText(c.site_name||NAME_TH,x,108);}
-    if(P.party==='1'&&c.party_no){g.fillStyle='#fff';g.beginPath();g.arc(W-130,100,70,0,7);g.fill();g.fillStyle=nv;g.textAlign='center';g.font='600 24px Anuphan';g.fillText('เบอร์',W-130,76);g.font='700 56px Anuphan';g.fillText(c.party_no,W-130,126);g.textAlign='left';}
-    let y=190;
-    if(im){g.save();const k=Math.min(960/im.width,520/im.height),w=im.width*k,h=im.height*k;g.drawImage(im,60+(960-w)/2,y+(520-h)/2,w,h);g.restore();y+=540;}else y+=20;
-    const tw=ld?620:960;
-    g.fillStyle='#fff';g.font='700 66px Anuphan';wrap(g,P.head,tw,3).forEach(l=>{g.fillText(l,60,y+50);y+=84;});
-    y+=10;g.font='400 36px Anuphan';g.fillStyle='rgba(255,255,255,.93)';wrap(g,P.body,tw,im?5:9).forEach(l=>{g.fillText(l,60,y+36);y+=56;});
-    if(ld){const h=Math.min(480,ld.height*(380/ld.width)),w=ld.width*(h/ld.height);g.drawImage(ld,W-50-w,H-100-h,w,h);}
-    g.fillStyle=nv;g.fillRect(0,H-100,W,100);g.fillStyle='#fff';g.font='500 30px Anuphan';g.fillText(c.site_en||c.site_name||'',60,H-38);
-    const contacts=[P.contactName,P.contactPhone?'โทร '+P.contactPhone:'',P.contactLine,P.contactEmail,P.contactWeb].filter(Boolean);if(contacts.length){g.textAlign='left';g.font='400 22px Anuphan';g.fillStyle='rgba(255,255,255,.96)';let cy=H-132;contacts.slice(0,4).forEach((v,i)=>{g.fillText(v,60,cy+i*26,960);});}else if(c.phone_on!=='false'&&c.phone_number){g.textAlign='right';g.fillText('โทร '+c.phone_number,W-60,H-38);g.textAlign='left';}
+    const fade=Math.max(0,Math.min(95,Number(P.fade)||0))/100;
+    if(P.type==='person'){const fg=g.createLinearGradient(0,0,0,H);fg.addColorStop(0,`rgba(18,49,143,${Math.min(.94,fade+.12)})`);fg.addColorStop(.52,`rgba(29,79,216,${fade})`);fg.addColorStop(1,`rgba(77,179,245,${Math.max(.08,fade*.55)})`);g.fillStyle=fg;g.fillRect(0,0,W,H);}
+    if(P.type==='standard'){
+      if(P.logo==='1'){
+        if(lg){const k=Math.min(180/lg.width,150/lg.height);const w=lg.width*k,h=lg.height*k;const tmp=document.createElement('canvas');tmp.width=Math.max(1,Math.round(w));tmp.height=Math.max(1,Math.round(h));const tg=tmp.getContext('2d');tg.drawImage(lg,0,0,tmp.width,tmp.height);tg.globalCompositeOperation='source-in';tg.fillStyle='#fff';tg.fillRect(0,0,tmp.width,tmp.height);g.drawImage(tmp,(W-w)/2,48,w,h);}
+        g.fillStyle='#fff';g.textAlign='center';g.font='700 42px Anuphan';g.fillText(c.site_name||NAME_TH,W/2,225,900);g.font='400 28px Anuphan';g.fillText(c.site_tagline||'ตรา... เป็นได้มากกว่านี้',W/2,265,900);g.textAlign='left';
+      }
+      let y=390;g.textAlign='center';g.fillStyle='#fff';g.font='700 66px Anuphan';wrap(g,P.head,960,3).forEach(l=>{g.fillText(l,W/2,y,980);y+=82;});y+=22;g.font='400 34px Anuphan';wrap(g,P.body,940,10).forEach(l=>{g.fillText(l,W/2,y,960);y+=48;});g.textAlign='left';
+    } else {
+      if(P.logo==='1'){let x=60;if(lg){const k=90/lg.height;g.drawImage(lg,60,50,lg.width*k,90);x=80+lg.width*k;}g.fillStyle='#fff';g.font='700 40px Anuphan';g.fillText(c.site_name||NAME_TH,x,108);}
+      if(P.party==='1'&&c.party_no){g.fillStyle='#fff';g.beginPath();g.arc(W-130,100,70,0,7);g.fill();g.fillStyle=nv;g.textAlign='center';g.font='600 24px Anuphan';g.fillText('เบอร์',W-130,76);g.font='700 56px Anuphan';g.fillText(c.party_no,W-130,126);g.textAlign='left';}
+      let y=190;
+      if(im){g.save();const k=Math.min(960/im.width,520/im.height),w=im.width*k,h=im.height*k;if(im.width>0&&im.height>0){const tmp=document.createElement('canvas');tmp.width=Math.max(1,Math.round(w));tmp.height=Math.max(1,Math.round(h));const tg=tmp.getContext('2d');tg.drawImage(im,0,0,tmp.width,tmp.height);const mask=tg.createRadialGradient(tmp.width/2,tmp.height/2,Math.min(tmp.width,tmp.height)*.28,tmp.width/2,tmp.height/2,Math.max(tmp.width,tmp.height)*.72);mask.addColorStop(0,'rgba(255,255,255,1)');mask.addColorStop(1,'rgba(255,255,255,0)');tg.globalCompositeOperation='destination-in';tg.fillStyle=mask;tg.fillRect(0,0,tmp.width,tmp.height);g.drawImage(tmp,60+(960-w)/2,y+(520-h)/2,w,h);}g.restore();y+=540;}else y+=20;
+      const tw=ld?620:960;g.fillStyle='#fff';g.font='700 66px Anuphan';wrap(g,P.head,tw,3).forEach(l=>{g.fillText(l,60,y+50);y+=84;});y+=10;g.font='400 36px Anuphan';g.fillStyle='rgba(255,255,255,.93)';wrap(g,P.body,tw,im?5:9).forEach(l=>{g.fillText(l,60,y+36);y+=56;});
+      if(ld){const h=Math.min(480,ld.height*(380/ld.width)),w=ld.width*(h/ld.height);g.drawImage(ld,W-50-w,H-100-h,w,h);}
+      g.fillStyle=nv;g.fillRect(0,H-100,W,100);g.fillStyle='#fff';g.font='500 30px Anuphan';g.fillText(c.site_en||c.site_name||'',60,H-38);
+    }
   }
   async function draw(){const my=++tok;await render($('pc'),P,()=>my===tok);}
   const paint=bindUp('pm',P,'img',false,go);
   bindUp('pbg',P,'bg',false,go);
+  $('ptype').onchange=ev=>{P.type=ev.target.value;$('fadeControl').classList.toggle('hide',P.type!=='person');go();};
   $('pfade').oninput=ev=>{P.fade=ev.target.value;go();};
-  [['pcname','contactName'],['pcphone','contactPhone'],['pcline','contactLine'],['pcemail','contactEmail'],['pcweb','contactWeb']].forEach(([id,key])=>$(id).oninput=ev=>{P[key]=ev.target.value;go();});
-  $('psave').onclick=async()=>{try{const vals={poster_bg:P.bg,poster_fade:String(P.fade),poster_contact_name:P.contactName,poster_contact_phone:P.contactPhone,poster_contact_line:P.contactLine,poster_contact_email:P.contactEmail,poster_contact_web:P.contactWeb};const rows=Object.entries(vals).map(([key,value])=>({key,value:String(value||'')}));const res=await db.from('cp_settings').upsert(rows,{onConflict:'key'});if(res.error)throw res.error;toast('บันทึกพื้นหลังและข้อมูลติดต่อแล้ว');}catch(err){fail('บันทึกไม่สำเร็จ',err);}};
+  $('psave').onclick=async()=>{try{const vals={poster_bg:P.bg,poster_fade:String(P.fade)};const rows=Object.entries(vals).map(([key,value])=>({key,value:String(value||'')}));const res=await db.from('cp_settings').upsert(rows,{onConflict:'key'});if(res.error)throw res.error;toast('บันทึกค่าพื้นหลังและเอฟเฟกต์แล้ว');}catch(err){fail('บันทึกไม่สำเร็จ',err);}};
   const fill=()=>{const s=SRC[P.src];$('pi').innerHTML='<option value="">— พิมพ์เอง —</option>'+(s.h?D[P.src].map((r,i)=>`<option value="${i}">${e(s.h(r)||'(ไม่มีชื่อ)')}</option>`).join(''):'');};
   $('pi').onchange=()=>{const r=(D[P.src]||[])[$('pi').value];if(r){const s=SRC[P.src];P.head=s.h(r)||'';P.body=s.d(r)||'';P.img=s.i(r)||'';$('ph').value=P.head;$('pb').value=P.body;}paint();go();};
   $('ps').onchange=ev=>{P.src=ev.target.value;fill();$('pi').value=(D[P.src]||[]).length?'0':'';$('pi').onchange();};
